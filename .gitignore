@@ -1,0 +1,10 @@
+# Python / FastAPI
+__pycache__/
+*.pyc
+env/
+venv/
+*.env
+
+# React / Node
+node_modules/
+build/
