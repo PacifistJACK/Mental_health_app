@@ -5,4 +5,4 @@ requests
 python-dotenv
 joblib
 pandas
-sklearn
+scikit-learn
