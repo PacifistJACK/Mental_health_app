@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+// 1. Import motion from framer-motion
+import { motion } from "framer-motion"; 
 import {
   Heart,
   Smile,
@@ -34,7 +36,7 @@ const Home = () => {
   const navigate = useNavigate();
   const [floatingElements, setFloatingElements] = useState([]);
 
-  /* Floating Icons */
+  /* Floating Icons Setup */
   useEffect(() => {
     const elements = [];
     const elementTypes = [
@@ -108,22 +110,37 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50 relative overflow-hidden">
-      {/* FLOATING BACKGROUND */}
+      
+      {/* -------------------------------------------------- */}
+      {/* UPDATED FLOATING BACKGROUND (Now using framer-motion) */}
+      {/* -------------------------------------------------- */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {floatingElements.map((element) => {
           const IconComponent = element.icon;
           return (
-            <IconComponent
+            <motion.div
               key={element.id}
-              className={`absolute ${element.size} ${element.color} animate-bounce`}
-              style={{
-                left: `${element.x}%`,
-                top: `${element.y}%`,
-                animationDuration: `${element.duration}s`,
-                animationDelay: `${element.delay}s`,
-                opacity: element.opacity
+              className={`absolute ${element.color} ${element.size}`}
+              style={{ 
+                  left: `${element.x}%`, 
+                  top: `${element.y}%`,
+                  opacity: element.opacity 
               }}
-            />
+              // The animation logic matches Bot.jsx exactly
+              animate={{ 
+                  y: [0, -20, 0], 
+                  rotate: [0, 180, 360], 
+                  scale: [1, 1.2, 1] 
+              }}
+              transition={{
+                duration: element.duration,
+                repeat: Infinity,
+                delay: element.delay,
+                ease: "easeInOut"
+              }}
+            >
+              <IconComponent />
+            </motion.div>
           );
         })}
       </div>

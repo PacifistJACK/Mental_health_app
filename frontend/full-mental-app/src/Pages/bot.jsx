@@ -25,7 +25,20 @@ const Bot = () => {
   const [floatingElements, setFloatingElements] = useState([]);
   const messagesEndRef = useRef(null);
 
-  /* Floating background elements */
+  // ---------------------------------------------------------
+  // FIX 1: Generate a Session ID for the user
+  // This ensures the backend remembers this specific user's chat history
+  // ---------------------------------------------------------
+  const userIdRef = useRef(
+    localStorage.getItem("chat_user_id") || 
+    "user_" + Math.random().toString(36).substr(2, 9)
+  );
+
+  useEffect(() => {
+    localStorage.setItem("chat_user_id", userIdRef.current);
+  }, []);
+
+  /* Floating background elements setup */
   useEffect(() => {
     const elements = [];
     const elementTypes = [
@@ -50,7 +63,6 @@ const Bot = () => {
         delay: Math.random() * 5
       });
     }
-
     setFloatingElements(elements);
   }, []);
 
@@ -74,17 +86,31 @@ const Bot = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("https://mental-health-app-backend-29tk.onrender.com/chat", {
+      // ---------------------------------------------------------
+      // FIX 2: Point to the correct Backend URL (Port 8000)
+      // ---------------------------------------------------------
+      const response = await fetch("http://localhost:8000/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: userMessage.text })
+        // ---------------------------------------------------------
+        // FIX 3: Send the exact structure the Backend Pydantic model expects
+        // ---------------------------------------------------------
+        body: JSON.stringify({ 
+            user_id: userIdRef.current,
+            message: userMessage.text 
+        })
       });
+
+      if (!response.ok) throw new Error("Network response was not ok");
 
       const data = await response.json();
 
       const botMessage = {
         id: Date.now() + 1,
-        text: data.text,
+        // ---------------------------------------------------------
+        // FIX 4: Read the correct key ('response') from backend
+        // ---------------------------------------------------------
+        text: data.response || "I'm listening...", 
         sender: "bot"
       };
 
@@ -94,11 +120,11 @@ const Bot = () => {
         ...prev,
         {
           id: Date.now() + 1,
-          text: "⚠️ Sorry, something went wrong with the AI backend.",
+          text: "⚠️ Sorry, I'm having trouble connecting to the server.",
           sender: "bot"
         }
       ]);
-      console.error(error);
+      console.error("Chat Error:", error);
     }
 
     setIsLoading(false);
@@ -170,9 +196,15 @@ const Bot = () => {
                     : "justify-start"
                 }`}
               >
-                <p className="text-sm bg-white/70 p-3 rounded-2xl shadow">
+                <div 
+                    className={`max-w-[80%] text-sm p-3 rounded-2xl shadow ${
+                        message.sender === "user" 
+                        ? "bg-purple-500 text-white rounded-br-none" 
+                        : "bg-white/80 text-gray-800 rounded-bl-none"
+                    }`}
+                >
                   {message.text}
-                </p>
+                </div>
               </motion.div>
             ))}
           </AnimatePresence>
@@ -183,7 +215,7 @@ const Bot = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             >
-              <div className="bg-white/80 px-4 py-3 rounded-2xl shadow-md flex space-x-2">
+              <div className="bg-white/80 px-4 py-3 rounded-2xl shadow-md flex space-x-2 rounded-bl-none">
                 <motion.div className="w-2 h-2 bg-purple-500 rounded-full" animate={{ scale: [1, 1.5, 1] }} transition={{ duration: 0.6, repeat: Infinity }} />
                 <motion.div className="w-2 h-2 bg-pink-500 rounded-full" animate={{ scale: [1, 1.5, 1] }} transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }} />
                 <motion.div className="w-2 h-2 bg-indigo-500 rounded-full" animate={{ scale: [1, 1.5, 1] }} transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }} />
@@ -207,14 +239,14 @@ const Bot = () => {
               onChange={(e) => setInputText(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Share how you're feeling..."
-              className="flex-1 px-4 py-3 bg-white/90 border border-purple-200 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-300"
+              className="flex-1 px-4 py-3 bg-white/90 border border-purple-200 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-300 shadow-inner"
             />
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleSendMessage}
-              disabled={!inputText.trim()}
-              className="p-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full shadow-lg disabled:opacity-50"
+              disabled={!inputText.trim() || isLoading}
+              className="p-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Send className="w-5 h-5" />
             </motion.button>

@@ -1,83 +1,99 @@
-from fastapi import FastAPI, APIRouter
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 import requests
-from dotenv import load_dotenv
 import os
+from dotenv import load_dotenv
+from typing import Dict, List
 
 load_dotenv()
 
-API_KEY = os.getenv("API_KEY")
+# ------------------------------
+# CONFIGURATION
+# ------------------------------
+# ⚠️ SECURITY: Load from .env, never hardcode here!
+API_KEY = os.getenv("API_KEY") 
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
-# ------------------------------
-# CHAT HISTORY
-# ------------------------------
-chat_history = [
-    {
-        "role": "system",
-        "content": (
-            "You are a trained mental-health counselor. "
-            "Your goal is to provide emotional support, coping strategies, "
-            "active listening, grounding advice, and crisis-awareness. "
-            "You must speak gently, respectfully, and empathetically. "
-            "Never scold, judge, or give medical advice or diagnosis. "
-            "If the user asks about topics unrelated to mental health, "
-            "politics, programming, general Q&A, or factual questions "
-            "such as 'who is the PM of India', kindly decline and redirect "
-            "the conversation toward emotional well-being. "
-            "If the user expresses self-harm or danger, advise them to seek "
-            "immediate in-person professional help or contact emergency hotlines."
-        )
-    }
-]
+SYSTEM_PROMPT = {
+    "role": "system",
+    "content": (
+        "You are a trained mental-health counselor. "
+        "Your goal is to provide emotional support, coping strategies, "
+        "active listening, grounding advice, and crisis-awareness. "
+        "You must speak gently, respectfully, and empathetically. "
+        "Never scold, judge, or give medical advice or diagnosis. "
+        "If the user asks about topics unrelated to mental health, "
+        "politics, programming, general Q&A, or factual questions "
+        "such as 'who is the PM of India', kindly decline and redirect "
+        "the conversation toward emotional well-being. "
+        "If the user expresses self-harm or danger, advise them to seek "
+        "immediate in-person professional help or contact emergency hotlines."
+        "use good amount of emojies in chat"
+    )
+}
 
 # ------------------------------
-# Pydantic model
+# STATE MANAGEMENT
 # ------------------------------
-class UserMessage(BaseModel):
-    text: str
+# Stores history per user: { "user_123": [msg1, msg2], ... }
+user_sessions: Dict[str, List[Dict]] = {}
 
 # ------------------------------
-# Router
+# PYDANTIC MODEL (MATCHES FRONTEND)
+# ------------------------------
+class ChatRequest(BaseModel):
+    user_id: str   # Matches frontend "user_id"
+    message: str   # Matches frontend "message"
+
+# ------------------------------
+# ROUTER
 # ------------------------------
 router = APIRouter()
 
 @router.post("/chat")
-def chat(message: UserMessage):
-    chat_history.append({"role": "user", "content": message.text})
+def chat(data: ChatRequest):
+    user_id = data.user_id
+    user_input = data.message
 
-    payload = {"model": "meta-llama/llama-3.2-3b-instruct:free", "messages": chat_history}
-    headers = {"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"}
+    # 1. Initialize session if new user
+    if user_id not in user_sessions:
+        user_sessions[user_id] = [SYSTEM_PROMPT]
+    
+    # 2. Append User Message
+    user_sessions[user_id].append({"role": "user", "content": user_input})
 
+    # 3. Prepare Payload (Limit context to last 10 messages)
+    recent_history = [user_sessions[user_id][0]] + user_sessions[user_id][-10:]
+    
+    payload = {
+        "model": "allenai/olmo-3.1-32b-think:free", # Using the model you selected
+        "messages": recent_history
+    }
+    
+    headers = {
+        "Authorization": f"Bearer {API_KEY}", 
+        "Content-Type": "application/json",
+        "HTTP-Referer": "http://localhost:3000",
+    }
+
+    # 4. Call AI
     try:
         res = requests.post(OPENROUTER_URL, headers=headers, json=payload)
         res.raise_for_status()
-        ai_text = res.json()["choices"][0]["message"]["content"]
-    except:
-        ai_text = "⚠️ AI service unavailable."
+        
+        response_data = res.json()
+        
+        if "choices" not in response_data:
+            raise ValueError("Invalid API response format")
+            
+        ai_text = response_data["choices"][0]["message"]["content"]
 
-    chat_history.append({"role": "assistant", "content": ai_text})
-    return {"text": ai_text}
+    except Exception as e:
+        print(f"❌ API Error: {e}")
+        return {"response": "I'm having trouble connecting right now. Please try again."}
 
-# ------------------------------
-# Main app
-# ------------------------------
-app = FastAPI()
+    # 5. Append AI Response to History
+    user_sessions[user_id].append({"role": "assistant", "content": ai_text})
 
-# CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # React frontend
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Include router
-app.include_router(router)
-
-# Root endpoint
-@app.get("/")
-def root():
-    return {"message": "Chat API is running!"}
+    # 6. Return using the key "response" (Matches frontend)
+    return {"response": ai_text}
