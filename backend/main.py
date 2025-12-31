@@ -6,12 +6,17 @@ from quiz import router as quiz_router
 app = FastAPI()
 
 # CORS for React frontend
+origins = [
+    "http://localhost:3000",                  # Local development
+    "https://mentalhealth210.onrender.com",   # Your live React frontend
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=origins,
+    allow_credentials=True,                   # Required if you send cookies or headers
+    allow_methods=["*"],                      # Allows all methods (GET, POST, etc.)
+    allow_headers=["*"],                      # Allows all headers
 )
 
 # Include routers
