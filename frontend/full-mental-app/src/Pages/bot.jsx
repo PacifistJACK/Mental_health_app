@@ -89,7 +89,7 @@ const Bot = () => {
       // ---------------------------------------------------------
       // FIX 2: Point to the correct Backend URL (Port 8000)
       // ---------------------------------------------------------
-      const response = await fetch("http://localhost:8000/chat", {
+      const response = await fetch("https://mentalfitness210.onrender.com/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         // ---------------------------------------------------------
