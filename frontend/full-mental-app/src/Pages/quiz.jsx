@@ -75,7 +75,7 @@ const Quiz = () => {
   /* Submit to FastAPI */
   const submitAnswers = async () => {
     try {
-      const res = await fetch("http://localhost:8000/predict", {
+      const res = await fetch("https://mentalfitness210.onrender.com/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ answers })
