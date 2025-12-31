@@ -73,7 +73,7 @@ def chat(data: ChatRequest):
     headers = {
         "Authorization": f"Bearer {API_KEY}", 
         "Content-Type": "application/json",
-        "HTTP-Referer": "http://localhost:3000",
+        "HTTP-Referer": "https://mentalhealth210.onrender.com/",
     }
 
     # 4. Call AI
