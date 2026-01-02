@@ -66,7 +66,7 @@ def chat(data: ChatRequest):
     recent_history = [user_sessions[user_id][0]] + user_sessions[user_id][-10:]
     
     payload = {
-        "model": "allenai/olmo-3.1-32b-think:free", # Using the model you selected
+        "model": "xiaomi/mimo-v2-flash:free", # Using the model you selected
         "messages": recent_history
     }
     
