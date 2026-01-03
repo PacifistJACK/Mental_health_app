@@ -23,7 +23,7 @@ A calm and visually soothing landing page introducing the platform and its core 
 - AI Mental Health Chatbot
 - Upcoming features like Mindfulness Hub & Community Support
 
-![Home Page](https://github.com/user-attachments/assets/cac25536-5223-47c5-b189-6c3095fbd404)
+![Home Page](https://github.com/user-attachments/assets/a40d145c-3d0e-42e8-a612-8fd72c2036dc)
 
 ---
 
