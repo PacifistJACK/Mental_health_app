@@ -105,8 +105,8 @@ If you are experiencing serious mental health issues, please consult a licensed 
 
 ## 👨‍💻 Author
 
-Developed by **Utkarsh**  
-Computer Science Student | AI & Web Development Enthusiast  
+Developed by **Utkarsh Sharma**  
+Computer Science Student | AI Enthusiast  
 
 ---
 
