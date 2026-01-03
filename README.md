@@ -75,6 +75,7 @@ The chatbot is built to feel **supportive, emotionally aware, and non-robotic**.
 ### Backend
 - FastAPI
 - Python
+- API for chatbot 
 - AI/ML logic for mental health evaluation
 - Deployed as a **Render Web Service**
 
