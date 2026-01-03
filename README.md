@@ -1,40 +1,41 @@
 # 🧠 MindfulSpace – Mental Health Web Application
 
-MindfulSpace is a web-based mental health support platform designed to help users **check their mental well-being**, **understand their mental state**, and **get emotional support through an AI-powered chatbot**.  
+MindfulSpace is a web-based mental health support platform designed to help users **check their mental well-being**, **understand their mental state**, and **receive emotional support through an AI-powered chatbot**.  
 The goal is to make mental health awareness **simple, accessible, and stigma-free**.
 
-> ⚠️ **Note:** This project is still **under active development**. More features, improvements, and enhancements are planned.
+> ⚠️ **Important:** This project is currently **under active development (Beta Stage)**.  
+> Features, UI, and AI responses are continuously being improved.
 
 ---
 
 ## 🌐 Live Demo
 
 - **Frontend:** https://mentalhealth210.onrender.com/
-- **Backend:** Deployed using FastAPI (Render Web Service)
+- **Backend:** FastAPI deployed on Render (Web Service)
 
 ---
 
 ## ✨ Features
 
 ### 🏠 Home Page
-A calm, visually soothing landing page introducing the platform and its core features:
+A calm and visually soothing landing page introducing the platform and its core features:
 - Mental Health Check
 - AI Mental Health Chatbot
 - Upcoming features like Mindfulness Hub & Community Support
 
-![Home Page](<img width="1919" height="935" alt="Screenshot 2026-01-03 100705" src="https://github.com/user-attachments/assets/cac25536-5223-47c5-b189-6c3095fbd404" />)
+![Home Page](https://github.com/user-attachments/assets/cac25536-5223-47c5-b189-6c3095fbd404)
 
 ---
 
 ### 📝 Mental Health Check-In
 Users answer a series of simple questions related to their emotions, happiness, anxiety, and stress levels.
 
-- Step-by-step question flow
-- Progress indicator
-- Easy-to-understand options
+**Key Highlights:**
+- Step-by-step question flow  
+- Progress indicator  
+- Easy-to-understand options  
 
-![Mental Health Questions](<img width="1919" height="932" alt="Screenshot 2026-01-03 100506" src="https://github.com/user-attachments/assets/0ef83642-6cae-4947-9914-954d46e1afbc" />
-)
+![Mental Health Questions](https://github.com/user-attachments/assets/0ef83642-6cae-4947-9914-954d46e1afbc)
 
 ---
 
@@ -48,21 +49,19 @@ After completing the check-in, users receive a summarized report including:
 
 This helps users **understand their current mental state** in a clear and non-judgmental way.
 
-![Mental Health Report](<img width="1919" height="935" alt="Screenshot 2026-01-03 100705" src="https://github.com/user-attachments/assets/f8ef06f2-cc8b-4877-a29e-59e83d0aceef" />
-)
+![Mental Health Report](https://github.com/user-attachments/assets/f8ef06f2-cc8b-4877-a29e-59e83d0aceef)
 
 ---
 
 ### 💬 AI Mental Health Chatbot
-An empathetic AI chatbot that:
-- Listens to users
-- Responds with supportive and calming messages
-- Encourages healthy coping techniques
+An empathetic AI chatbot designed to:
+- Listen actively to users
+- Respond with supportive and calming messages
+- Encourage healthy coping techniques
 
-Designed to feel **supportive, non-robotic, and emotionally aware**.
+The chatbot is built to feel **supportive, emotionally aware, and non-robotic**.
 
-![Chatbot](<img width="1919" height="933" alt="Screenshot 2026-01-03 100831" src="https://github.com/user-attachments/assets/e706e0dd-cabc-4071-93fb-76b390780062" />
-)
+![AI Chatbot](https://github.com/user-attachments/assets/e706e0dd-cabc-4071-93fb-76b390780062)
 
 ---
 
@@ -76,27 +75,30 @@ Designed to feel **supportive, non-robotic, and emotionally aware**.
 ### Backend
 - FastAPI
 - Python
-- AI/ML models for mental health evaluation
+- AI/ML logic for mental health evaluation
 - Deployed as a **Render Web Service**
 
 ---
 
 ## 🚧 Project Status
 
-This project is **still under development** 🚀  
-Planned improvements include:
-- Better AI analysis
+🚀 **This project is still under development**
+
+Upcoming improvements:
+- Enhanced AI response quality
 - Mindfulness & meditation features
 - Community support system
-- Improved UI/UX
-- Security and performance optimizations
+- Better UI/UX animations
+- Security & performance optimizations
 
 ---
 
 ## 🤝 Disclaimer
 
 This application is **not a replacement for professional medical advice**.  
-It is intended for **educational and supportive purposes only**.
+It is intended for **educational and emotional support purposes only**.
+
+If you are experiencing serious mental health issues, please consult a licensed mental health professional.
 
 ---
 
@@ -107,4 +109,4 @@ Computer Science Student | AI & Web Development Enthusiast
 
 ---
 
-⭐ If you like this project, feel free to star the repository!
+⭐ If you like this project, feel free to **star the repository** and share feedback!
