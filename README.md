@@ -1,4 +1,4 @@
-<img width="1919" height="935" alt="Screenshot 2026-01-03 100705" src="https://github.com/user-attachments/assets/cac25536-5223-47c5-b189-6c3095fbd404" /># 🧠 MindfulSpace – Mental Health Web Application
+# 🧠 MindfulSpace – Mental Health Web Application
 
 MindfulSpace is a web-based mental health support platform designed to help users **check their mental well-being**, **understand their mental state**, and **get emotional support through an AI-powered chatbot**.  
 The goal is to make mental health awareness **simple, accessible, and stigma-free**.
@@ -22,8 +22,7 @@ A calm, visually soothing landing page introducing the platform and its core fea
 - AI Mental Health Chatbot
 - Upcoming features like Mindfulness Hub & Community Support
 
-![Home Page](<img width="1897" height="935" alt="Screenshot 2026-01-03 100400" src="https://github.com/user-attachments/assets/1cc088e0-93b2-43cd-806f-b1409a4c31d4" />
-)
+![Home Page](<img width="1919" height="935" alt="Screenshot 2026-01-03 100705" src="https://github.com/user-attachments/assets/cac25536-5223-47c5-b189-6c3095fbd404" />)
 
 ---
 
@@ -34,8 +33,8 @@ Users answer a series of simple questions related to their emotions, happiness, 
 - Progress indicator
 - Easy-to-understand options
 
-![Mental Health Questions](<img width="1919" height="932" alt="Screenshot 2026-01-03 100506" src="https://github.com/user-attachments/assets/d929ba96-e72d-420d-8763-c4563a36849c"/>
-()
+![Mental Health Questions](<img width="1919" height="932" alt="Screenshot 2026-01-03 100506" src="https://github.com/user-attachments/assets/0ef83642-6cae-4947-9914-954d46e1afbc" />
+)
 
 ---
 
@@ -49,7 +48,7 @@ After completing the check-in, users receive a summarized report including:
 
 This helps users **understand their current mental state** in a clear and non-judgmental way.
 
-![Mental Health Report](<img width="1919" height="935" alt="Screenshot 2026-01-03 100705" src="https://github.com/user-attachments/assets/256f6597-4e89-46c9-bb1d-725f7158f665" />
+![Mental Health Report](<img width="1919" height="935" alt="Screenshot 2026-01-03 100705" src="https://github.com/user-attachments/assets/f8ef06f2-cc8b-4877-a29e-59e83d0aceef" />
 )
 
 ---
@@ -62,8 +61,8 @@ An empathetic AI chatbot that:
 
 Designed to feel **supportive, non-robotic, and emotionally aware**.
 
-![Chatbot]<img width="1919" height="933" alt="Screenshot 2026-01-03 100831" src="https://github.com/user-attachments/assets/230d853e-ec36-430f-8f04-42af96aabcde" />
-()
+![Chatbot](<img width="1919" height="933" alt="Screenshot 2026-01-03 100831" src="https://github.com/user-attachments/assets/e706e0dd-cabc-4071-93fb-76b390780062" />
+)
 
 ---
 
