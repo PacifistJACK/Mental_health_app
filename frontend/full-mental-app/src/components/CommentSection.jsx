@@ -37,17 +37,34 @@ const CommentSection = ({ postId, post }) => {
     return () => unsub();
   }, [postId]);
 
-  /* ADD COMMENT */
+  /* ADD COMMENT + NOTIFICATION */
   const addComment = async () => {
     if (!user || !text.trim()) return;
 
+    const commentText = text;
+
     await addDoc(collection(db, "posts", postId, "comments"), {
-      text,
+      text: commentText,
       authorId: user.uid,
       authorName: user.displayName || "User",
       authorPhotoURL: user.photoURL || null,
       createdAt: new Date()
     });
+
+    // 🔔 COMMENT NOTIFICATION (no self notification)
+    if (post.authorId !== user.uid) {
+      await addDoc(collection(db, "notifications"), {
+        toUserId: post.authorId,
+        fromUserId: user.uid,
+        fromName: user.displayName || "Someone",
+        fromPhotoURL: user.photoURL || null,
+        type: "comment",
+        postId,
+        postPreview: commentText.slice(0, 60),
+        read: false,
+        createdAt: new Date()
+      });
+    }
 
     setText("");
   };
