@@ -62,7 +62,7 @@ def chat(data: ChatRequest):
     recent_history = [user_sessions[user_id][0]] + user_sessions[user_id][-10:]
     
     payload = {
-        "model": "anthropic/claude-opus-4.6", # Using the model you selected
+        "model": "z-ai/glm-5", # Using the model you selected
         "messages": recent_history
     }
     
