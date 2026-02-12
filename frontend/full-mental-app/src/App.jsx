@@ -8,6 +8,7 @@ import Community from "./Pages/community";
 import AnimatedNavbar from "./components/AnimatedNavbar";
 import Login from "./Pages/login";
 import Signup from "./Pages/signup";
+import Profile from "./Pages/profile";
 
 export default function App() {
   return (
@@ -19,7 +20,7 @@ export default function App() {
         <Route path="/community" element={<Community/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path="/signup" element={<Signup/>}/>
-        
+        <Route path="/profile" element={<Profile/>}/>
       </Routes>
     </Router>
   );
