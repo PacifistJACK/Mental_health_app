@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useMotionValueEvent
-} from "framer-motion";
+import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import {
   Heart,
   Smile,
@@ -13,16 +8,15 @@ import {
   Cloud,
   Flower,
   Leaf,
-  Menu,
-  X,
   Users,
   MessageCircle
 } from "lucide-react";
+import AnimatedNavbar from "../components/AnimatedNavbar";
 
 const Community = () => {
-  const [floatingElements, setFloatingElements] = useState([]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [floatingElements, setFloatingElements] = useState([]);
 
   /* ================= FLOATING BACKGROUND ================= */
   useEffect(() => {
@@ -38,21 +32,21 @@ const Community = () => {
     ];
 
     for (let i = 0; i < 15; i++) {
-      const elementType =
-        elementTypes[Math.floor(Math.random() * elementTypes.length)];
+      const el = elementTypes[Math.floor(Math.random() * elementTypes.length)];
       elements.push({
         id: i,
-        ...elementType,
+        ...el,
         x: Math.random() * 100,
         y: Math.random() * 100,
         duration: 15 + Math.random() * 20,
         delay: Math.random() * 5
       });
     }
+
     setFloatingElements(elements);
   }, []);
 
-  /* ================= NAVBAR SCROLL ANIMATION ================= */
+  /* ================= NAVBAR SCROLL EFFECT ================= */
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (latest) => {
     setScrolled(latest > 40);
@@ -61,7 +55,7 @@ const Community = () => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-pink-50">
 
-      {/* ================= FLOATING BACKGROUND ================= */}
+      {/* Floating Background */}
       {floatingElements.map((el) => {
         const Icon = el.icon;
         return (
@@ -82,95 +76,26 @@ const Community = () => {
         );
       })}
 
-      {/* ================= NAVBAR ================= */}
-      <motion.header
-        initial={{ y: -20, opacity: 0 }}
-        animate={{
-          y: 0,
-          opacity: 1,
-          backgroundColor: scrolled
-            ? "rgba(255,255,255,0.75)"
-            : "rgba(255,255,255,0.55)",
-          backdropFilter: scrolled ? "blur(14px)" : "blur(8px)",
-          boxShadow: scrolled
-            ? "0 10px 30px rgba(0,0,0,0.08)"
-            : "0 4px 12px rgba(0,0,0,0.04)"
-        }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-        className="fixed top-0 left-0 right-0 z-20"
-      >
-        <div className="flex items-center justify-between max-w-6xl px-4 py-4 mx-auto">
-
-          {/* Logo */}
-          <div className="flex items-center gap-2 font-semibold text-gray-800">
-            <Heart className="w-5 h-5 text-pink-500" />
-            <span>MindfulSpace</span>
-          </div>
-
-          {/* Desktop Buttons */}
-          <div className="items-center hidden gap-4 md:flex">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="text-gray-700 transition hover:text-gray-900"
-            >
-              Login
-            </motion.button>
-
-            <motion.button
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-5 py-2 text-white rounded-full shadow bg-gradient-to-r from-pink-400 to-purple-500"
-            >
-              Sign Up
-            </motion.button>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMenuOpen((v) => !v)}
-            className="text-gray-700 md:hidden"
-          >
-            {menuOpen ? <X /> : <Menu />}
-          </button>
-        </div>
-
-        {/* ================= MOBILE MENU ================= */}
-        <AnimatePresence>
-          {menuOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="px-4 pb-4 md:hidden bg-white/80 backdrop-blur-sm"
-            >
-              <div className="flex flex-col gap-3">
-                <button className="py-2 text-left text-gray-700">
-                  Login
-                </button>
-                <button className="py-2 text-white rounded-full bg-gradient-to-r from-pink-400 to-purple-500">
-                  Sign Up
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.header>
+      {/* Navbar (self-handling navigation) */}
+      <AnimatedNavbar
+        scrolled={scrolled}
+        menuOpen={menuOpen}
+        setMenuOpen={setMenuOpen}
+      />
 
       {/* ================= MAIN CONTENT ================= */}
       <main className="relative z-10 px-4 pt-32">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
           className="max-w-5xl mx-auto text-center"
         >
           <h1 className="mb-4 text-4xl font-bold text-gray-800 md:text-5xl">
             Community Support 💬
           </h1>
           <p className="max-w-2xl mx-auto text-lg text-gray-600">
-            A safe space to connect, share experiences, and support one another.
+            A safe place to connect, share experiences, and support each other.
           </p>
         </motion.div>
 
