@@ -93,7 +93,7 @@ const Home = () => {
       title: "Community Support",
       description:
         "Connect with others and share experiences in a safe environment",
-      icon: Zap,
+      icon: Heart,
       color: "from-gray-400 to-gray-500",
       status: "coming-soon"
     },
@@ -102,7 +102,7 @@ const Home = () => {
       title: "The Rest Initiative",
       description:
         "A sanctuary to play, connect with others, and share experiences in a safe.",
-      icon: Heart,
+      icon: Zap,
       color: "from-gray-400 to-gray-500",
       status: "coming-soon"
     }
