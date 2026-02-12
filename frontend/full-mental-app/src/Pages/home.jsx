@@ -90,16 +90,16 @@ const Home = () => {
     },
     {
       id: 3,
-      title: "Mindfulness Hub",
+      title: "Community Support",
       description:
-        "Guided meditation and relaxation exercises for daily practice",
-      icon: Zap,
+        "Connect with others and share experiences in a safe environment",
+      icon: Heart,
       color: "from-gray-400 to-gray-500",
       status: "coming-soon"
     },
     {
       id: 4,
-      title: "Community Support",
+      title: "The Rest Initiative",
       description:
         "Connect with others and share experiences in a safe environment",
       icon: Heart,
