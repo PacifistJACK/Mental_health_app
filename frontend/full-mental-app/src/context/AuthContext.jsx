@@ -5,9 +5,11 @@ import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
-  signOut
+  signOut,
+  updateProfile
 } from "firebase/auth";
-import { auth } from "../firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { auth, db } from "../firebase";
 
 const AuthContext = createContext();
 
@@ -15,7 +17,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  /* 🔁 Listen to auth state */
+  /* 🔁 Auth listener */
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
@@ -24,17 +26,52 @@ export const AuthProvider = ({ children }) => {
     return unsub;
   }, []);
 
-  /* 📧 Email + Password */
-  const signupWithEmail = (email, password) =>
-    createUserWithEmailAndPassword(auth, email, password);
+  /* 🔧 Ensure Firestore user exists */
+  const ensureUserDoc = async (firebaseUser) => {
+    if (!firebaseUser) return;
+
+    const ref = doc(db, "users", firebaseUser.uid);
+    const snap = await getDoc(ref);
+
+    if (!snap.exists()) {
+      await setDoc(ref, {
+        uid: firebaseUser.uid,
+        displayName: firebaseUser.displayName || "User",
+        email: firebaseUser.email,
+        photoURL: firebaseUser.photoURL || null,
+        createdAt: new Date()
+      });
+    }
+  };
+
+  /* 📧 Email auth */
+  const signupWithEmail = async (email, password, name) => {
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+
+    await updateProfile(cred.user, {
+      displayName: name
+    });
+
+    await ensureUserDoc({
+      ...cred.user,
+      displayName: name
+    });
+
+    return cred;
+  };
 
   const loginWithEmail = (email, password) =>
     signInWithEmailAndPassword(auth, email, password);
 
-  /* 🔵 Google Login */
-  const googleProvider = new GoogleAuthProvider();
-  const loginWithGoogle = () =>
-    signInWithPopup(auth, googleProvider);
+  /* 🔵 GOOGLE LOGIN (FIXED) */
+  const loginWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    const res = await signInWithPopup(auth, provider);
+
+    await ensureUserDoc(res.user);
+
+    return res;
+  };
 
   /* 🚪 Logout */
   const logout = () => signOut(auth);

@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { User, Camera, Pencil } from "lucide-react";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { User, Camera, Pencil, Trash2 } from "lucide-react";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  collection,
+  query,
+  where,
+  onSnapshot,
+  deleteDoc
+} from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
 import { db, auth } from "../firebase";
 import { useAuth } from "../context/AuthContext";
 import AnimatedNavbar from "../components/AnimatedNavbar";
 
-const CLOUD_NAME = "djxmd61lq"; // 🔁 replace
-const UPLOAD_PRESET = "mindful_uploads"; // 🔁 replace
+const CLOUD_NAME = "djxmd61lq";
+const UPLOAD_PRESET = "mindful_uploads";
 
 const Profile = () => {
   const { user } = useAuth();
@@ -16,15 +25,16 @@ const Profile = () => {
   const [username, setUsername] = useState("");
   const [editing, setEditing] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [posts, setPosts] = useState([]);
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  /* 🔁 Load profile from Firestore */
+  /* ================= LOAD PROFILE ================= */
   useEffect(() => {
-    const loadProfile = async () => {
-      if (!user) return;
+    if (!user) return;
 
+    const loadProfile = async () => {
       const snap = await getDoc(doc(db, "users", user.uid));
       if (snap.exists()) {
         setUsername(snap.data().displayName || "");
@@ -34,9 +44,30 @@ const Profile = () => {
     loadProfile();
   }, [user]);
 
-  /* ✅ SAVE USERNAME (AUTH + FIRESTORE) */
+  /* ================= LOAD USER POSTS ================= */
+  useEffect(() => {
+    if (!user) return;
+
+    const q = query(
+      collection(db, "posts"),
+      where("authorId", "==", user.uid)
+    );
+
+    const unsub = onSnapshot(q, (snap) => {
+      setPosts(
+        snap.docs.map((d) => ({
+          id: d.id,
+          ...d.data()
+        }))
+      );
+    });
+
+    return () => unsub();
+  }, [user]);
+
+  /* ================= SAVE USERNAME ================= */
   const saveUsername = async () => {
-    if (!user || !username.trim()) return;
+    if (!username.trim()) return;
 
     await updateProfile(auth.currentUser, {
       displayName: username
@@ -49,10 +80,10 @@ const Profile = () => {
     setEditing(false);
   };
 
-  /* ✅ CLOUDINARY PROFILE PHOTO UPLOAD */
+  /* ================= CLOUDINARY UPLOAD ================= */
   const handlePhotoChange = async (e) => {
     const file = e.target.files[0];
-    if (!file || !user) return;
+    if (!file) return;
 
     try {
       setUploading(true);
@@ -63,23 +94,17 @@ const Profile = () => {
 
       const res = await fetch(
         `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-        {
-          method: "POST",
-          body: formData
-        }
+        { method: "POST", body: formData }
       );
 
       const data = await res.json();
-      const photoURL = data.secure_url;
 
-      // Update Firebase Auth
       await updateProfile(auth.currentUser, {
-        photoURL
+        photoURL: data.secure_url
       });
 
-      // Update Firestore
       await updateDoc(doc(db, "users", user.uid), {
-        photoURL
+        photoURL: data.secure_url
       });
 
       setUploading(false);
@@ -87,6 +112,11 @@ const Profile = () => {
       console.error(err);
       setUploading(false);
     }
+  };
+
+  /* ================= DELETE POST ================= */
+  const deletePost = async (postId) => {
+    await deleteDoc(doc(db, "posts", postId));
   };
 
   if (!user) {
@@ -106,11 +136,11 @@ const Profile = () => {
       />
 
       <div className="max-w-4xl px-4 mx-auto pt-28">
-        {/* PROFILE CARD */}
+        {/* ================= PROFILE CARD ================= */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-8 shadow-xl bg-white/80 backdrop-blur-lg rounded-3xl"
+          className="p-8 mb-12 shadow-xl bg-white/80 backdrop-blur-lg rounded-3xl"
         >
           {/* AVATAR */}
           <div className="relative w-32 h-32 mx-auto mb-6">
@@ -126,15 +156,9 @@ const Profile = () => {
               </div>
             )}
 
-            {/* UPLOAD BUTTON */}
             <label className="absolute p-2 bg-white rounded-full shadow cursor-pointer bottom-1 right-1">
               <Camera className="w-4 h-4 text-gray-600" />
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handlePhotoChange}
-                hidden
-              />
+              <input type="file" accept="image/*" hidden onChange={handlePhotoChange} />
             </label>
           </div>
 
@@ -175,18 +199,43 @@ const Profile = () => {
           </div>
         </motion.div>
 
-        {/* POSTS PLACEHOLDER */}
-        <div className="mt-10">
-          <h3 className="mb-4 text-xl font-semibold text-gray-800">
+        {/* ================= USER POSTS ================= */}
+        <div>
+          <h3 className="mb-6 text-xl font-semibold text-gray-800">
             Your Posts
           </h3>
 
-          <div className="p-6 text-center text-gray-500 shadow bg-white/60 backdrop-blur-md rounded-2xl">
-            <p>No posts yet.</p>
-            <p className="mt-2 text-sm">
-              When you post, they’ll appear here.
-            </p>
-          </div>
+          {posts.length === 0 ? (
+            <div className="p-6 text-center text-gray-500 shadow bg-white/60 backdrop-blur-md rounded-2xl">
+              <p>No posts yet.</p>
+              <p className="mt-2 text-sm">
+                When you post, they’ll appear here.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {posts.map((post) => (
+                <motion.div
+                  key={post.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-6 shadow bg-white/80 backdrop-blur-lg rounded-2xl"
+                >
+                  <p className="mb-4 text-gray-800 whitespace-pre-wrap">
+                    {post.content}
+                  </p>
+
+                  <button
+                    onClick={() => deletePost(post.id)}
+                    className="flex items-center gap-2 text-sm text-red-500 hover:text-red-600"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Delete
+                  </button>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
