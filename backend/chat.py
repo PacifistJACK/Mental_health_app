@@ -7,6 +7,10 @@ from typing import Dict, List
 
 load_dotenv()
 
+# ------------------------------
+# CONFIGURATION
+# ------------------------------
+# ⚠️ SECURITY: Load from .env, never hardcode here!
 API_KEY = os.getenv("API_KEY") 
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
@@ -62,14 +66,14 @@ def chat(data: ChatRequest):
     recent_history = [user_sessions[user_id][0]] + user_sessions[user_id][-10:]
     
     payload = {
-        "model": "z-ai/glm-5", # Using the model you selected
+        "model": "stepfun/step-3.5-flash:free", # Using the model you selected
         "messages": recent_history
     }
     
     headers = {
         "Authorization": f"Bearer {API_KEY}", 
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://mentalhealth210.onrender.com/",
+        "HTTP-Referer": "http://localhost:3000",
     }
 
     # 4. Call AI
