@@ -101,15 +101,16 @@ const Home = () => {
       id: 4,
       title: "The Rest Initiative",
       description:
-        "A sanctuary to play, connect with others, and share experiences in a safe.",
-      icon: Zap,
-      color: "from-gray-400 to-gray-500",
-      status: "coming-soon"
+        "Connect with others and share experiences in a safe environment",
+      icon: Heart,
+      color: "from-green-500 to-lime-500",
+      status: "available",
+      route:"/community"
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50 relative overflow-hidden">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-cyan-50">
       
       {/* -------------------------------------------------- */}
       {/* UPDATED FLOATING BACKGROUND (Now using framer-motion) */}
@@ -146,24 +147,24 @@ const Home = () => {
       </div>
 
       {/* MAIN CONTENT */}
-      <div className="relative z-10 container mx-auto px-4 py-8">
+      <div className="container relative z-10 px-4 py-8 mx-auto">
         {/* HEADER */}
-        <header className="text-center mb-16 pt-8">
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-800 mb-4">
+        <header className="pt-8 mb-16 text-center">
+          <h1 className="mb-4 text-5xl font-bold text-gray-800 md:text-6xl">
             Mind
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500">
               ful
             </span>
             Space
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="max-w-2xl mx-auto text-xl text-gray-600">
             Your journey to better mental health starts here. Discover tools and
             resources designed to support your well-being.
           </p>
         </header>
 
         {/* FEATURE CARDS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+        <div className="grid max-w-6xl grid-cols-1 gap-8 mx-auto md:grid-cols-2 lg:grid-cols-4">
           {features.map((feature) => {
             const IconComponent = feature.icon;
             return (
@@ -183,20 +184,20 @@ const Home = () => {
                   <div
                     className={`w-16 h-16 rounded-full bg-gradient-to-r ${feature.color} flex items-center justify-center mb-6`}
                   >
-                    <IconComponent className="text-white w-8 h-8" />
+                    <IconComponent className="w-8 h-8 text-white" />
                   </div>
 
                   {feature.status === "coming-soon" && (
-                    <span className="px-3 py-1 rounded-full bg-gray-200 text-gray-700 text-sm font-semibold">
+                    <span className="px-3 py-1 text-sm font-semibold text-gray-700 bg-gray-200 rounded-full">
                       Coming Soon
                     </span>
                   )}
 
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                  <h3 className="mb-2 text-xl font-semibold text-gray-800">
                     {feature.title}
                   </h3>
 
-                  <p className="text-gray-600 text-sm mb-6">
+                  <p className="mb-6 text-sm text-gray-600">
                     {feature.description}
                   </p>
 
@@ -223,29 +224,29 @@ const Home = () => {
         </div>
 
         {/* INFO SECTION */}
-        <div className="text-center mt-20 pb-12">
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 max-w-3xl mx-auto shadow-lg">
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">
+        <div className="pb-12 mt-20 text-center">
+          <div className="max-w-3xl p-8 mx-auto shadow-lg bg-white/70 backdrop-blur-sm rounded-2xl">
+            <h2 className="mb-4 text-3xl font-bold text-gray-800">
               Your Mental Health Matters
             </h2>
-            <p className="text-gray-600 text-lg leading-relaxed mb-6">
+            <p className="mb-6 text-lg leading-relaxed text-gray-600">
               We're here to provide you with the tools and support you need to
               take care of your mental well-being.
             </p>
 
             <div className="flex flex-wrap justify-center gap-4">
               <div className="flex items-center text-gray-600">
-                <Heart className="w-5 h-5 text-pink-500 mr-2" />
+                <Heart className="w-5 h-5 mr-2 text-pink-500" />
                 <span>Compassionate Care</span>
               </div>
 
               <div className="flex items-center text-gray-600">
-                <Star className="w-5 h-5 text-yellow-500 mr-2" />
+                <Star className="w-5 h-5 mr-2 text-yellow-500" />
                 <span>Evidence-Based Tools</span>
               </div>
 
               <div className="flex items-center text-gray-600">
-                <Shield className="w-5 h-5 text-blue-500 mr-2" />
+                <Shield className="w-5 h-5 mr-2 text-blue-500" />
                 <span>Privacy First</span>
               </div>
             </div>
