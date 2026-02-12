@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-// 1. Import motion from framer-motion
-import { motion } from "framer-motion"; 
+import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import {
   Heart,
   Smile,
@@ -14,6 +13,7 @@ import {
   MessageCircle,
   Zap
 } from "lucide-react";
+import AnimatedNavbar from "../components/AnimatedNavbar";
 
 /* Shield Icon */
 const Shield = () => (
@@ -34,6 +34,16 @@ const Shield = () => (
 
 const Home = () => {
   const navigate = useNavigate();
+
+  /* ✅ NAVBAR STATE — MOVED INSIDE COMPONENT */
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  const { scrollY } = useScroll();
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    setScrolled(latest > 40);
+  });
+
   const [floatingElements, setFloatingElements] = useState([]);
 
   /* Floating Icons Setup */
@@ -94,8 +104,9 @@ const Home = () => {
       description:
         "Connect with others and share experiences in a safe environment",
       icon: Heart,
-      color: "from-gray-400 to-gray-500",
-      status: "coming-soon"
+      color: "from-green-400 to-lime-500",
+      status: "available",
+      route: "/community"
     },
     {
       id: 4,
@@ -103,18 +114,22 @@ const Home = () => {
       description:
         "Connect with others and share experiences in a safe environment",
       icon: Heart,
-      color: "from-green-500 to-lime-500",
-      status: "available",
-      route:"/community"
+      color: "from-gray-400 to-gray-500",
+      status: "coming-soon"
     }
   ];
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-cyan-50">
-      
-      {/* -------------------------------------------------- */}
-      {/* UPDATED FLOATING BACKGROUND (Now using framer-motion) */}
-      {/* -------------------------------------------------- */}
+
+      {/* ✅ NAVBAR */}
+      <AnimatedNavbar
+        scrolled={scrolled}
+        menuOpen={menuOpen}
+        setMenuOpen={setMenuOpen}
+      />
+
+      {/* Floating Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {floatingElements.map((element) => {
           const IconComponent = element.icon;
@@ -122,16 +137,15 @@ const Home = () => {
             <motion.div
               key={element.id}
               className={`absolute ${element.color} ${element.size}`}
-              style={{ 
-                  left: `${element.x}%`, 
-                  top: `${element.y}%`,
-                  opacity: element.opacity 
+              style={{
+                left: `${element.x}%`,
+                top: `${element.y}%`,
+                opacity: element.opacity
               }}
-              // The animation logic matches Bot.jsx exactly
-              animate={{ 
-                  y: [0, -20, 0], 
-                  rotate: [0, 180, 360], 
-                  scale: [1, 1.2, 1] 
+              animate={{
+                y: [0, -20, 0],
+                rotate: [0, 180, 360],
+                scale: [1, 1.2, 1]
               }}
               transition={{
                 duration: element.duration,
@@ -158,8 +172,7 @@ const Home = () => {
             Space
           </h1>
           <p className="max-w-2xl mx-auto text-xl text-gray-600">
-            Your journey to better mental health starts here. Discover tools and
-            resources designed to support your well-being.
+            Your journey to better mental health starts here.
           </p>
         </header>
 
@@ -230,8 +243,7 @@ const Home = () => {
               Your Mental Health Matters
             </h2>
             <p className="mb-6 text-lg leading-relaxed text-gray-600">
-              We're here to provide you with the tools and support you need to
-              take care of your mental well-being.
+              We're here to support your mental well-being.
             </p>
 
             <div className="flex flex-wrap justify-center gap-4">
