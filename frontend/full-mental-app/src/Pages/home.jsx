@@ -90,7 +90,7 @@ const Home = () => {
     },
     {
       id: 2,
-      title: "Mental Health Chatbot",
+      title: "Mental Health bot",
       description:
         "Get instant support and guidance from our AI-powered mental health assistant",
       icon: MessageCircle,
