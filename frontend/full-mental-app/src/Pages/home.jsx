@@ -94,8 +94,9 @@ const Home = () => {
       description:
         "Connect with others and share experiences in a safe environment",
       icon: Heart,
-      color: "from-gray-400 to-gray-500",
-      status: "coming-soon"
+      color: "from-green-400 to-lime-500",
+      status: "available",
+      route:"/community"
     },
     {
       id: 4,
@@ -103,9 +104,8 @@ const Home = () => {
       description:
         "Connect with others and share experiences in a safe environment",
       icon: Heart,
-      color: "from-green-500 to-lime-500",
-      status: "available",
-      route:"/community"
+      color: "from-gray-400 to-gray-500",
+      status: "coming-soon"
     }
   ];
 
