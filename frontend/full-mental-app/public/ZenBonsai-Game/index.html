@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="A calming digital bonsai game for mental wellbeing. Nurture your tree, find your peace.">
+  <title>Zen Bonsai — Nurture Your Peace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=2">
+</head>
+
+<body>
+  <!-- Ambient particles layer -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Day/night gradient background -->
+  <div id="sky-bg"></div>
+
+  <!-- Main game container -->
+  <div id="game-wrapper">
+
+    <!-- Header: gentle branding + points -->
+    <header id="game-header">
+      <div class="brand">
+        <span class="brand-icon">🌿</span>
+        <h1>Zen Bonsai</h1>
+      </div>
+      <div class="points-display">
+        <span id="points-value">0</span>
+        <span class="points-label">harmony points</span>
+      </div>
+    </header>
+
+    <!-- Central bonsai canvas -->
+    <main id="bonsai-area">
+      <canvas id="bonsai-canvas"></canvas>
+      <!-- Floating toast messages -->
+      <div id="toast-container"></div>
+      <!-- Growth stage label -->
+      <div id="growth-stage">
+        <span id="stage-icon">🌱</span>
+        <span id="stage-label">Seed</span>
+      </div>
+    </main>
+
+    <!-- Status bars -->
+    <section id="status-panel">
+      <div class="status-bar" id="hydration-bar">
+        <span class="status-icon">💧</span>
+        <div class="bar-track">
+          <div class="bar-fill" id="hydration-fill" style="width:70%"></div>
+        </div>
+        <span class="status-text" id="hydration-text">70%</span>
+      </div>
+      <div class="status-bar" id="health-bar">
+        <span class="status-icon">💚</span>
+        <div class="bar-track">
+          <div class="bar-fill" id="health-fill" style="width:80%"></div>
+        </div>
+        <span class="status-text" id="health-text">80%</span>
+      </div>
+      <div class="status-bar" id="growth-bar">
+        <span class="status-icon">🌳</span>
+        <div class="bar-track">
+          <div class="bar-fill growth" id="growth-fill" style="width:0%"></div>
+        </div>
+        <span class="status-text" id="growth-text">0%</span>
+      </div>
+    </section>
+
+    <!-- Action buttons -->
+    <nav id="action-panel">
+      <button class="action-btn" id="btn-water" data-action="water" title="Water your bonsai">
+        <span class="btn-emoji">💧</span>
+        <span class="btn-label">Water</span>
+      </button>
+      <button class="action-btn" id="btn-trim" data-action="trim" title="Trim the branches" disabled>
+        <span class="btn-emoji">✂️</span>
+        <span class="btn-label">Trim</span>
+      </button>
+      <button class="action-btn" id="btn-fertilize" data-action="fertilize" title="Add fertilizer">
+        <span class="btn-emoji">🌱</span>
+        <span class="btn-label">Fertilize</span>
+      </button>
+      <button class="action-btn" id="btn-sunlight" data-action="sunlight" title="Give sunlight">
+        <span class="btn-emoji">☀️</span>
+        <span class="btn-label">Sunlight</span>
+      </button>
+      <button class="action-btn" id="btn-meditate" data-action="meditate" title="Sit and meditate">
+        <span class="btn-emoji">🧘</span>
+        <span class="btn-label">Meditate</span>
+      </button>
+    </nav>
+
+    <!-- Gentle message area -->
+    <footer id="game-footer">
+      <p id="mindful-message">Take a deep breath. Your bonsai is waiting for you. 🍃</p>
+    </footer>
+
+  </div>
+
+  <!-- Audio elements for ambient sounds -->
+  <div id="audio-container" style="display:none;">
+    <!-- We'll use Web Audio API in JS for all sounds -->
+  </div>
+
+  <!-- Death / rebirth overlay -->
+  <div id="death-overlay" class="overlay hidden">
+    <div class="overlay-content">
+      <p class="overlay-emoji">🍂</p>
+      <h2>Your bonsai has returned to the earth</h2>
+      <p>Every ending is a new beginning.</p>
+      <button id="btn-rebirth" class="action-btn rebirth-btn">
+        <span class="btn-emoji">🌱</span>
+        <span class="btn-label">Plant Again</span>
+      </button>
+    </div>
+  </div>
+
+  <script src="game.js?v=3"></script>
+</body>
+
+</html>
