@@ -5,11 +5,11 @@ import Home from "./Pages/home";
 import Quiz from "./Pages/quiz";
 import Bot from "./Pages/bot";
 import Community from "./Pages/community";
-import AnimatedNavbar from "./components/AnimatedNavbar";
 import Login from "./Pages/login";
 import Signup from "./Pages/signup";
 import Profile from "./Pages/profile";
 import CreatePost from "./Pages/CreatePost";
+import PlayArena from "./Pages/playArena";
 
 export default function App() {
   return (
@@ -23,6 +23,7 @@ export default function App() {
         <Route path="/login" element={<Login/>}/>
         <Route path="/signup" element={<Signup/>}/>
         <Route path="/profile" element={<Profile/>}/>
+        <Route path="/play-arena" element={<PlayArena />} />
       </Routes>
     </Router>
   );
