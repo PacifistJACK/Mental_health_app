@@ -11,7 +11,6 @@ import {
   Leaf,
   Brain,
   MessageCircle,
-  Zap,
   Gamepad
 } from "lucide-react";
 import AnimatedNavbar from "../components/AnimatedNavbar";
@@ -112,11 +111,13 @@ const Home = () => {
     {
       id: 4,
       title: "Play Arena",
-      description: "Dive into mini-games and fun activities to unwind and recharge",
+      description:
+        "Take a mindful break with Zen Bonsai and other calming mini-games",
       icon: Gamepad,
       color: "from-blue-400 to-purple-500",
-      status: "coming-soon"
-   }
+      status: "available",
+      route: "/play-arena"
+    }
   ];
 
   return (

@@ -66,7 +66,7 @@ def chat(data: ChatRequest):
     recent_history = [user_sessions[user_id][0]] + user_sessions[user_id][-10:]
     
     payload = {
-        "model": "stepfun/step-3.5-flash:free", # Using the model you selected
+        "model": "nvidia/nemotron-3-super-120b-a12b:free", # Using the model you selected
         "messages": recent_history
     }
     

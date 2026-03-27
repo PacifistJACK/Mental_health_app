@@ -1,0 +1,488 @@
+/* ═══════════════════════════════════════════
+   ZEN BONSAI — Design System
+   A soothing, organic aesthetic
+   ═══════════════════════════════════════════ */
+
+:root {
+  /* Palette — warm earth + soft nature */
+  --cream:       #faf6f0;
+  --cream-glass: rgba(250, 246, 240, 0.65);
+  --sage:        #8fae8b;
+  --sage-light:  #b8d4b4;
+  --sage-dark:   #5c7a58;
+  --earth:       #8b7355;
+  --earth-light: #c4a882;
+  --earth-dark:  #5a4a38;
+  --sky-day:     #d4e4ed;
+  --sky-sunset:  #e8c7a0;
+  --sky-night:   #2c3e50;
+  --water-blue:  #7eb8d4;
+  --sun-gold:    #f0d87e;
+  --health-green:#7ec87e;
+  --danger-red:  #d4887e;
+  --text:        #4a4035;
+  --text-soft:   #7a7065;
+  --shadow:      rgba(90, 74, 56, 0.12);
+
+  /* Typography */
+  --font: 'Nunito', 'Segoe UI', sans-serif;
+
+  /* Spacing */
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-pill: 50px;
+}
+
+/* ─── Reset & Base ─── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--cream);
+}
+
+/* ─── Sky background layer ─── */
+#sky-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(170deg, var(--sky-day) 0%, var(--cream) 60%, var(--sage-light) 100%);
+  transition: background 8s ease;
+}
+
+#sky-bg.sunset {
+  background: linear-gradient(170deg, var(--sky-sunset) 0%, #f0d8b8 40%, var(--cream) 100%);
+}
+
+#sky-bg.night {
+  background: linear-gradient(170deg, var(--sky-night) 0%, #1a2634 50%, #2c3e50 100%);
+}
+
+/* ─── Particle canvas ─── */
+#particles-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ─── Game wrapper ─── */
+#game-wrapper {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  height: 100dvh;
+  padding: 16px 20px;
+  gap: 10px;
+}
+
+/* ─── Header ─── */
+#game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 520px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-icon {
+  font-size: 1.6rem;
+  animation: sway 4s ease-in-out infinite;
+}
+
+.brand h1 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--sage-dark);
+  letter-spacing: 0.5px;
+}
+
+.points-display {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  background: var(--cream-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 6px 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(143, 174, 139, 0.25);
+}
+
+#points-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--sage-dark);
+  line-height: 1;
+}
+
+.points-label {
+  font-size: 0.6rem;
+  color: var(--text-soft);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ─── Bonsai Area ─── */
+#bonsai-area {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#bonsai-canvas {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius);
+}
+
+#toast-container {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.toast {
+  background: var(--cream-glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 6px 18px;
+  border-radius: var(--radius-pill);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--sage-dark);
+  border: 1px solid rgba(143, 174, 139, 0.3);
+  animation: toastIn 0.4s ease, toastOut 0.5s ease 1.8s forwards;
+  white-space: nowrap;
+}
+
+#growth-stage {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--cream-glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 4px 16px;
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--earth);
+  border: 1px solid rgba(139, 115, 85, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ─── Status Panel ─── */
+#status-panel {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--cream-glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 7px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(143, 174, 139, 0.15);
+}
+
+.status-icon {
+  font-size: 1rem;
+  width: 22px;
+  text-align: center;
+}
+
+.bar-track {
+  flex: 1;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#hydration-fill {
+  background: linear-gradient(90deg, var(--water-blue), #a8d4e8);
+}
+
+#health-fill {
+  background: linear-gradient(90deg, var(--health-green), #a8e8a8);
+}
+
+#growth-fill {
+  background: linear-gradient(90deg, var(--earth-light), var(--sage));
+}
+
+.status-text {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  min-width: 32px;
+  text-align: right;
+}
+
+/* ─── Action Panel ─── */
+#action-panel {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  width: 72px;
+  height: 72px;
+  background: var(--cream-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(143, 174, 139, 0.3);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.action-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(143, 174, 139, 0.15), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.action-btn:hover:not(:disabled)::before {
+  opacity: 1;
+}
+
+.action-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  border-color: var(--sage);
+  box-shadow: 0 8px 24px var(--shadow);
+}
+
+.action-btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.95);
+}
+
+.action-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.action-btn.cooldown {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.action-btn.cooldown::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--sage);
+  animation: cooldownBar 5s linear forwards;
+}
+
+.btn-emoji {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.btn-label {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+/* ─── Footer ─── */
+#game-footer {
+  width: 100%;
+  max-width: 520px;
+  text-align: center;
+  padding: 4px 0;
+}
+
+#mindful-message {
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  font-style: italic;
+  font-weight: 300;
+  transition: opacity 0.5s ease;
+}
+
+/* ─── Death Overlay ─── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(42, 36, 28, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 1.5s ease;
+}
+
+.overlay.hidden {
+  display: none;
+}
+
+.overlay-content {
+  text-align: center;
+  color: var(--cream);
+  max-width: 340px;
+}
+
+.overlay-emoji {
+  font-size: 3.5rem;
+  margin-bottom: 16px;
+  animation: sway 3s ease-in-out infinite;
+}
+
+.overlay-content h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--earth-light);
+}
+
+.overlay-content p {
+  font-size: 0.9rem;
+  color: rgba(250, 246, 240, 0.7);
+  margin-bottom: 24px;
+}
+
+.rebirth-btn {
+  width: auto !important;
+  height: auto !important;
+  flex-direction: row !important;
+  padding: 12px 28px !important;
+  gap: 8px !important;
+  background: rgba(143, 174, 139, 0.25) !important;
+  border-color: var(--sage) !important;
+}
+
+.rebirth-btn .btn-label {
+  font-size: 0.85rem !important;
+  color: var(--cream) !important;
+}
+
+/* ─── Night mode text adjustments ─── */
+body.night-mode .brand h1 { color: var(--sage-light); }
+body.night-mode #points-value { color: var(--sage-light); }
+body.night-mode .points-label { color: rgba(250, 246, 240, 0.6); }
+body.night-mode .status-text { color: rgba(250, 246, 240, 0.6); }
+body.night-mode .btn-label { color: rgba(250, 246, 240, 0.6); }
+body.night-mode #mindful-message { color: rgba(250, 246, 240, 0.5); }
+body.night-mode #growth-stage { color: var(--earth-light); }
+body.night-mode .toast { color: var(--sage-light); }
+body.night-mode .points-display,
+body.night-mode .status-bar,
+body.night-mode .action-btn,
+body.night-mode #growth-stage,
+body.night-mode .toast {
+  background: rgba(30, 40, 50, 0.6);
+  border-color: rgba(143, 174, 139, 0.2);
+}
+
+/* ─── Animations ─── */
+@keyframes sway {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toastOut {
+  from { opacity: 1; }
+  to { opacity: 0; transform: translateY(-8px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes cooldownBar {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 480px) {
+  #game-wrapper { padding: 10px 12px; gap: 8px; }
+  .action-btn { width: 60px; height: 60px; }
+  .btn-emoji { font-size: 1.25rem; }
+  .brand h1 { font-size: 1.1rem; }
+  #points-value { font-size: 1.2rem; }
+}
+
+@media (min-width: 768px) {
+  .action-btn { width: 84px; height: 84px; }
+  .btn-emoji { font-size: 1.8rem; }
+  .btn-label { font-size: 0.7rem; }
+}

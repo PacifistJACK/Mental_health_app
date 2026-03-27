@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="A calming digital bonsai game for mental wellbeing. Nurture your tree, find your peace.">
+    <title>Zen Bonsai — Nurture Your Peace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ═══════════════════════════════════════════
+   ZEN BONSAI — Design System
+   A soothing, organic aesthetic
+   ═══════════════════════════════════════════ */
+
+        :root {
+            --cream: #faf6f0;
+            --cream-glass: rgba(250, 246, 240, 0.65);
+            --sage: #8fae8b;
+            --sage-light: #b8d4b4;
+            --sage-dark: #5c7a58;
+            --earth: #8b7355;
+            --earth-light: #c4a882;
+            --earth-dark: #5a4a38;
+            --sky-day: #d4e4ed;
+            --sky-sunset: #e8c7a0;
+            --sky-night: #2c3e50;
+            --water-blue: #7eb8d4;
+            --sun-gold: #f0d87e;
+            --health-green: #7ec87e;
+            --danger-red: #d4887e;
+            --text: #4a4035;
+            --text-soft: #7a7065;
+            --shadow: rgba(90, 74, 56, 0.12);
+            --font: 'Nunito', 'Segoe UI', sans-serif;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --radius-pill: 50px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+            font-family: var(--font);
+            color: var(--text);
+            background: var(--cream);
+        }
+
+        #sky-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: linear-gradient(170deg, var(--sky-day) 0%, var(--cream) 60%, var(--sage-light) 100%);
+            transition: background 8s ease;
+        }
+
+        #sky-bg.sunset {
+            background: linear-gradient(170deg, var(--sky-sunset) 0%, #f0d8b8 40%, var(--cream) 100%);
+        }
+
+        #sky-bg.night {
+            background: linear-gradient(170deg, var(--sky-night) 0%, #1a2634 50%, #2c3e50 100%);
+        }
+
+        #particles-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        #game-wrapper {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            height: 100dvh;
+            padding: 16px 20px;
+            gap: 10px;
+        }
+
+        #game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 520px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-icon {
+            font-size: 1.6rem;
+            animation: sway 4s ease-in-out infinite;
+        }
+
+        .brand h1 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--sage-dark);
+            letter-spacing: 0.5px;
+        }
+
+        .points-display {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            background: var(--cream-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 6px 16px;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(143, 174, 139, 0.25);
+        }
+
+        #points-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--sage-dark);
+            line-height: 1;
+        }
+
+        .points-label {
+            font-size: 0.6rem;
+            color: var(--text-soft);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #bonsai-area {
+            position: relative;
+            flex: 1;
+            width: 100%;
+            max-width: 520px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #bonsai-canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: var(--radius);
+        }
+
+        #toast-container {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .toast {
+            background: var(--cream-glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 6px 18px;
+            border-radius: var(--radius-pill);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--sage-dark);
+            border: 1px solid rgba(143, 174, 139, 0.3);
+            animation: toastIn 0.4s ease, toastOut 0.5s ease 1.8s forwards;
+            white-space: nowrap;
+        }
+
+        #growth-stage {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--cream-glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 4px 16px;
+            border-radius: var(--radius-pill);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--earth);
+            border: 1px solid rgba(139, 115, 85, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        #status-panel {
+            width: 100%;
+            max-width: 520px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--cream-glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 7px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(143, 174, 139, 0.15);
+        }
+
+        .status-icon {
+            font-size: 1rem;
+            width: 22px;
+            text-align: center;
+        }
+
+        .bar-track {
+            flex: 1;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.06);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #hydration-fill {
+            background: linear-gradient(90deg, var(--water-blue), #a8d4e8);
+        }
+
+        #health-fill {
+            background: linear-gradient(90deg, var(--health-green), #a8e8a8);
+        }
+
+        #growth-fill {
+            background: linear-gradient(90deg, var(--earth-light), var(--sage));
+        }
+
+        .status-text {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-soft);
+            min-width: 32px;
+            text-align: right;
+        }
+
+        #action-panel {
+            width: 100%;
+            max-width: 520px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            width: 72px;
+            height: 72px;
+            background: var(--cream-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1.5px solid rgba(143, 174, 139, 0.3);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(143, 174, 139, 0.15), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .action-btn:hover:not(:disabled)::before {
+            opacity: 1;
+        }
+
+        .action-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            border-color: var(--sage);
+            box-shadow: 0 8px 24px var(--shadow);
+        }
+
+        .action-btn:active:not(:disabled) {
+            transform: translateY(0) scale(0.95);
+        }
+
+        .action-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .action-btn.cooldown {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .action-btn.cooldown::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--sage);
+            animation: cooldownBar 5s linear forwards;
+        }
+
+        .btn-emoji {
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .btn-label {
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: var(--text-soft);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        #game-footer {
+            width: 100%;
+            max-width: 520px;
+            text-align: center;
+            padding: 4px 0;
+        }
+
+        #mindful-message {
+            font-size: 0.8rem;
+            color: var(--text-soft);
+            font-style: italic;
+            font-weight: 300;
+            transition: opacity 0.5s ease;
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(42, 36, 28, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 1.5s ease;
+        }
+
+        .overlay.hidden {
+            display: none;
+        }
+
+        .overlay-content {
+            text-align: center;
+            color: var(--cream);
+            max-width: 340px;
+        }
+
+        .overlay-emoji {
+            font-size: 3.5rem;
+            margin-bottom: 16px;
+            animation: sway 3s ease-in-out infinite;
+        }
+
+        .overlay-content h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--earth-light);
+        }
+
+        .overlay-content p {
+            font-size: 0.9rem;
+            color: rgba(250, 246, 240, 0.7);
+            margin-bottom: 24px;
+        }
+
+        .rebirth-btn {
+            width: auto !important;
+            height: auto !important;
+            flex-direction: row !important;
+            padding: 12px 28px !important;
+            gap: 8px !important;
+            background: rgba(143, 174, 139, 0.25) !important;
+            border-color: var(--sage) !important;
+        }
+
+        .rebirth-btn .btn-label {
+            font-size: 0.85rem !important;
+            color: var(--cream) !important;
+        }
+
+        body.night-mode .brand h1 {
+            color: var(--sage-light);
+        }
+
+        body.night-mode #points-value {
+            color: var(--sage-light);
+        }
+
+        body.night-mode .points-label {
+            color: rgba(250, 246, 240, 0.6);
+        }
+
+        body.night-mode .status-text {
+            color: rgba(250, 246, 240, 0.6);
+        }
+
+        body.night-mode .btn-label {
+            color: rgba(250, 246, 240, 0.6);
+        }
+
+        body.night-mode #mindful-message {
+            color: rgba(250, 246, 240, 0.5);
+        }
+
+        body.night-mode #growth-stage {
+            color: var(--earth-light);
+        }
+
+        body.night-mode .toast {
+            color: var(--sage-light);
+        }
+
+        body.night-mode .points-display,
+        body.night-mode .status-bar,
+        body.night-mode .action-btn,
+        body.night-mode #growth-stage,
+        body.night-mode .toast {
+            background: rgba(30, 40, 50, 0.6);
+            border-color: rgba(143, 174, 139, 0.2);
+        }
+
+        @keyframes sway {
+
+            0%,
+            100% {
+                transform: rotate(-3deg);
+            }
+
+            50% {
+                transform: rotate(3deg);
+            }
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(-12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes toastOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes cooldownBar {
+            from {
+                width: 100%;
+            }
+
+            to {
+                width: 0%;
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.08);
+            }
+        }
+
+        @media (max-width: 480px) {
+            #game-wrapper {
+                padding: 10px 12px;
+                gap: 8px;
+            }
+
+            .action-btn {
+                width: 60px;
+                height: 60px;
+            }
+
+            .btn-emoji {
+                font-size: 1.25rem;
+            }
+
+            .brand h1 {
+                font-size: 1.1rem;
+            }
+
+            #points-value {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .action-btn {
+                width: 84px;
+                height: 84px;
+            }
+
+            .btn-emoji {
+                font-size: 1.8rem;
+            }
+
+            .btn-label {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="particles-canvas"></canvas>
+    <div id="sky-bg"></div>
+
+    <div id="game-wrapper">
+        <header id="game-header">
+            <div class="brand">
+                <span class="brand-icon">🌿</span>
+                <h1>Zen Bonsai</h1>
+            </div>
+            <div class="points-display">
+                <span id="points-value">0</span>
+                <span class="points-label">harmony points</span>
+            </div>
+        </header>
+
+        <main id="bonsai-area">
+            <canvas id="bonsai-canvas"></canvas>
+            <div id="toast-container"></div>
+            <div id="growth-stage">
+                <span id="stage-icon">🌱</span>
+                <span id="stage-label">Seed</span>
+            </div>
+        </main>
+
+        <section id="status-panel">
+            <div class="status-bar" id="hydration-bar">
+                <span class="status-icon">💧</span>
+                <div class="bar-track">
+                    <div class="bar-fill" id="hydration-fill" style="width:70%"></div>
+                </div>
+                <span class="status-text" id="hydration-text">70%</span>
+            </div>
+            <div class="status-bar" id="health-bar">
+                <span class="status-icon">💚</span>
+                <div class="bar-track">
+                    <div class="bar-fill" id="health-fill" style="width:80%"></div>
+                </div>
+                <span class="status-text" id="health-text">80%</span>
+            </div>
+            <div class="status-bar" id="growth-bar">
+                <span class="status-icon">🌳</span>
+                <div class="bar-track">
+                    <div class="bar-fill growth" id="growth-fill" style="width:0%"></div>
+                </div>
+                <span class="status-text" id="growth-text">0%</span>
+            </div>
+        </section>
+
+        <nav id="action-panel">
+            <button class="action-btn" id="btn-water" data-action="water" title="Water your bonsai">
+                <span class="btn-emoji">💧</span><span class="btn-label">Water</span>
+            </button>
+            <button class="action-btn" id="btn-trim" data-action="trim" title="Trim the branches" disabled>
+                <span class="btn-emoji">✂️</span><span class="btn-label">Trim</span>
+            </button>
+            <button class="action-btn" id="btn-fertilize" data-action="fertilize" title="Add fertilizer">
+                <span class="btn-emoji">🌱</span><span class="btn-label">Fertilize</span>
+            </button>
+            <button class="action-btn" id="btn-sunlight" data-action="sunlight" title="Give sunlight">
+                <span class="btn-emoji">☀️</span><span class="btn-label">Sunlight</span>
+            </button>
+            <button class="action-btn" id="btn-meditate" data-action="meditate" title="Sit and meditate">
+                <span class="btn-emoji">🧘</span><span class="btn-label">Meditate</span>
+            </button>
+        </nav>
+
+        <footer id="game-footer">
+            <p id="mindful-message">Take a deep breath. Your bonsai is waiting for you. 🍃</p>
+        </footer>
+    </div>
+
+    <div id="death-overlay" class="overlay hidden">
+        <div class="overlay-content">
+            <p class="overlay-emoji">🍂</p>
+            <h2>Your bonsai has returned to the earth</h2>
+            <p>Every ending is a new beginning.</p>
+            <button id="btn-rebirth" class="action-btn rebirth-btn">
+                <span class="btn-emoji">🌱</span><span class="btn-label">Plant Again</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            'use strict';
+
+            const STAGES = [
+                { name: 'Seed', icon: '🌰', minGrowth: 0 },
+                { name: 'Sprout', icon: '🌱', minGrowth: 20 },
+                { name: 'Young', icon: '🌿', minGrowth: 40 },
+                { name: 'Mature', icon: '🌳', minGrowth: 70 },
+                { name: 'Ancient', icon: '🎋', minGrowth: 100 },
+            ];
+
+            const MESSAGES = [
+                "Take a deep breath. Your bonsai is waiting for you. 🍃",
+                "Stillness is where growth begins. 🌿",
+                "Every little drop of care matters. 💧",
+                "Patience — the tree knows no hurry. 🌸",
+                "You are doing something beautiful today. 🌱",
+                "Listen to the silence between the leaves. 🍂",
+                "This moment is yours. Breathe. 🌾",
+                "Nature doesn't rush, yet everything is accomplished. 🌻",
+                "Be like water — soft, yet powerful. 💧",
+                "Your calm is contagious — even trees feel it. 🌳",
+                "Growth happens in quiet moments. 🌙",
+                "You're cultivating peace, one action at a time. ☯️",
+            ];
+
+            const SAVE_KEY = 'zen_bonsai_save';
+
+            let state = {
+                hydration: 70, health: 80, growth: 0, leafDensity: 1.0,
+                points: 0, stage: 0, alive: true, lastTick: Date.now(),
+                dayPhase: 'day', dayTimer: 0, branches: [], leaves: [],
+                treeSeed: Math.random() * 10000,
+            };
+
+            const cooldowns = { water: 0, trim: 0, fertilize: 0, sunlight: 0, meditate: 0 };
+            const COOLDOWN_DURATION = { water: 3000, trim: 6000, fertilize: 8000, sunlight: 4000, meditate: 5000 };
+
+            const $ = (s) => document.querySelector(s);
+            const bonsaiCanvas = $('#bonsai-canvas');
+            const bCtx = bonsaiCanvas.getContext('2d');
+            const particleCanvas = $('#particles-canvas');
+            const pCtx = particleCanvas.getContext('2d');
+
+            const hydrationFill = $('#hydration-fill');
+            const healthFill = $('#health-fill');
+            const growthFill = $('#growth-fill');
+            const hydrationText = $('#hydration-text');
+            const healthText = $('#health-text');
+            const growthText = $('#growth-text');
+            const pointsValue = $('#points-value');
+            const stageLabel = $('#stage-label');
+            const stageIcon = $('#stage-icon');
+            const mindfulMsg = $('#mindful-message');
+            const deathOverlay = $('#death-overlay');
+
+            function resizeCanvases() {
+                const area = $('#bonsai-area');
+                bonsaiCanvas.width = area.clientWidth;
+                bonsaiCanvas.height = area.clientHeight;
+                particleCanvas.width = window.innerWidth;
+                particleCanvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvases);
+            resizeCanvases();
+
+            // ═══ AMBIENT AUDIO ═══
+            let audioCtx = null;
+            let ambienceStarted = false;
+
+            function initAudio() {
+                if (audioCtx) return;
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            function createNoiseNode() {
+                const bufferSize = audioCtx.sampleRate * 4;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                let last = 0;
+                for (let i = 0; i < bufferSize; i++) {
+                    const white = Math.random() * 2 - 1;
+                    data[i] = (last + (0.02 * white)) / 1.02;
+                    last = data[i]; data[i] *= 3.5;
+                }
+                const source = audioCtx.createBufferSource();
+                source.buffer = buffer; source.loop = true;
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass'; filter.frequency.value = 400;
+                const gain = audioCtx.createGain(); gain.gain.value = 0.06;
+                source.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
+                source.start();
+            }
+
+            function createWindNode() {
+                const bufferSize = audioCtx.sampleRate * 6;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                let last = 0;
+                for (let i = 0; i < bufferSize; i++) {
+                    const white = Math.random() * 2 - 1;
+                    data[i] = (last + (0.01 * white)) / 1.01;
+                    last = data[i]; data[i] *= 2;
+                }
+                const source = audioCtx.createBufferSource();
+                source.buffer = buffer; source.loop = true;
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'bandpass'; filter.frequency.value = 250; filter.Q.value = 0.5;
+                const gain = audioCtx.createGain(); gain.gain.value = 0.03;
+                const lfo = audioCtx.createOscillator();
+                const lfoGain = audioCtx.createGain();
+                lfo.frequency.value = 0.15; lfoGain.gain.value = 0.015;
+                lfo.connect(lfoGain); lfoGain.connect(gain.gain); lfo.start();
+                source.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
+                source.start();
+            }
+
+            function playChime(freq = 520, duration = 0.6) {
+                if (!audioCtx) return;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(freq * 1.5, audioCtx.currentTime + duration * 0.3);
+                osc.frequency.exponentialRampToValueAtTime(freq * 0.8, audioCtx.currentTime + duration);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + duration);
+            }
+
+            function playActionSound(action) {
+                const freqs = { water: [392, 523], trim: [659, 784], fertilize: [349, 440], sunlight: [523, 659], meditate: [262, 392] };
+                const [f1, f2] = freqs[action] || [440, 550];
+                playChime(f1, 0.4);
+                setTimeout(() => playChime(f2, 0.8), 150);
+            }
+
+            function startAmbience() {
+                if (ambienceStarted) return;
+                initAudio(); createNoiseNode(); createWindNode();
+                ambienceStarted = true;
+            }
+
+            document.addEventListener('click', startAmbience, { once: true });
+            document.addEventListener('touchstart', startAmbience, { once: true });
+
+            // ═══ BONSAI RENDERER ═══
+            function seededRandom(seed) {
+                let s = seed;
+                return function () { s = (s * 16807 + 0) % 2147483647; return (s - 1) / 2147483646; };
+            }
+
+            function renderBonsai() {
+                const W = bonsaiCanvas.width, H = bonsaiCanvas.height;
+                bCtx.clearRect(0, 0, W, H);
+                const progress = state.growth / 100, stageIdx = state.stage, isAlive = state.alive;
+                const rng = seededRandom(state.treeSeed);
+                drawPot(W, H); drawSoil(W, H, progress);
+                if (progress < 0.02 && stageIdx === 0) { drawSeed(W, H); return; }
+                const trunkBaseX = W / 2, trunkBaseY = H * 0.72;
+                const trunkHeight = 40 + progress * (H * 0.35);
+                drawTree(trunkBaseX, trunkBaseY, trunkHeight, progress, stageIdx, isAlive, rng);
+            }
+
+            function drawPot(W, H) {
+                const cx = W / 2, potTop = H * 0.72, potBottom = H * 0.88;
+                const potTopWidth = W * 0.28, potBotWidth = W * 0.22, rimHeight = 8;
+                bCtx.save();
+                bCtx.beginPath();
+                bCtx.moveTo(cx - potTopWidth, potTop + rimHeight);
+                bCtx.lineTo(cx - potBotWidth, potBottom);
+                bCtx.quadraticCurveTo(cx, potBottom + 12, cx + potBotWidth, potBottom);
+                bCtx.lineTo(cx + potTopWidth, potTop + rimHeight);
+                bCtx.closePath();
+                const potGrad = bCtx.createLinearGradient(cx - potTopWidth, potTop, cx + potTopWidth, potTop);
+                potGrad.addColorStop(0, '#8b6f52'); potGrad.addColorStop(0.3, '#a68968');
+                potGrad.addColorStop(0.7, '#9a7d5e'); potGrad.addColorStop(1, '#7a6048');
+                bCtx.fillStyle = potGrad; bCtx.fill();
+                bCtx.beginPath();
+                bCtx.ellipse(cx, potTop + rimHeight / 2, potTopWidth + 6, rimHeight, 0, 0, Math.PI * 2);
+                const rimGrad = bCtx.createLinearGradient(cx, potTop - 4, cx, potTop + rimHeight + 4);
+                rimGrad.addColorStop(0, '#a68968'); rimGrad.addColorStop(1, '#8b6f52');
+                bCtx.fillStyle = rimGrad; bCtx.fill();
+                bCtx.beginPath();
+                bCtx.ellipse(cx, potBottom + 4, potBotWidth + 10, 6, 0, 0, Math.PI * 2);
+                bCtx.fillStyle = 'rgba(0,0,0,0.08)'; bCtx.fill();
+                bCtx.restore();
+            }
+
+            function drawSoil(W, H) {
+                const cx = W / 2, soilY = H * 0.72 + 4, soilWidth = W * 0.27;
+                bCtx.save();
+                bCtx.beginPath(); bCtx.ellipse(cx, soilY, soilWidth, 10, 0, 0, Math.PI * 2);
+                const dryness = 1 - state.hydration / 100;
+                const r = Math.round(90 + dryness * 30), g = Math.round(70 + (1 - dryness) * 20), b = Math.round(45 + (1 - dryness) * 10);
+                bCtx.fillStyle = `rgb(${r},${g},${b})`; bCtx.fill();
+                if (state.hydration > 50) {
+                    bCtx.beginPath(); bCtx.ellipse(cx - 10, soilY - 2, soilWidth * 0.4, 4, -0.2, 0, Math.PI * 2);
+                    bCtx.fillStyle = `rgba(126,184,212,${(state.hydration - 50) / 300})`; bCtx.fill();
+                }
+                bCtx.restore();
+            }
+
+            function drawSeed(W, H) {
+                const cx = W / 2, cy = H * 0.71;
+                bCtx.save(); bCtx.beginPath(); bCtx.ellipse(cx, cy, 6, 8, 0.2, 0, Math.PI * 2);
+                bCtx.fillStyle = '#6b5535'; bCtx.fill();
+                bCtx.strokeStyle = '#5a4a2e'; bCtx.lineWidth = 1; bCtx.stroke(); bCtx.restore();
+            }
+
+            function drawTree(x, y, height, progress, stageIdx, alive, rng) {
+                const time = Date.now() / 1000;
+                const density = state.leafDensity;
+                const trunkColor = alive ? '#6b5035' : '#8a7560';
+                const leafGreen = alive ? `hsl(${110 + Math.sin(time * 0.5) * 10}, ${45 + progress * 15}%, ${35 + progress * 10}%)` : '#9a8a60';
+                const leafGreen2 = alive ? `hsl(${125 + Math.sin(time * 0.3) * 8}, ${40 + progress * 12}%, ${40 + progress * 8}%)` : '#8a7a55';
+                const trunkWidth = 3 + progress * 8;
+                bCtx.save();
+                const curveAmt = rng() * 12 - 6, midX = x + curveAmt, topY = y - height;
+                bCtx.beginPath();
+                bCtx.moveTo(x - trunkWidth / 2, y);
+                bCtx.quadraticCurveTo(midX - trunkWidth / 3, y - height * 0.5, midX - trunkWidth / 4, topY);
+                bCtx.lineTo(midX + trunkWidth / 4, topY);
+                bCtx.quadraticCurveTo(midX + trunkWidth / 3, y - height * 0.5, x + trunkWidth / 2, y);
+                bCtx.closePath(); bCtx.fillStyle = trunkColor; bCtx.fill();
+                bCtx.strokeStyle = alive ? 'rgba(0,0,0,0.08)' : 'rgba(0,0,0,0.05)'; bCtx.lineWidth = 0.5;
+                for (let i = 0; i < 5; i++) {
+                    const ly = y - height * (0.15 + rng() * 0.7);
+                    bCtx.beginPath(); bCtx.moveTo(x - trunkWidth / 3, ly);
+                    bCtx.quadraticCurveTo(midX, ly - 3 + rng() * 6, x + trunkWidth / 3, ly + 2); bCtx.stroke();
+                }
+                if (stageIdx >= 1) {
+                    const numBranches = Math.floor(2 + progress * 6);
+                    const visibleBranches = Math.max(1, Math.floor(numBranches * (0.4 + density * 0.6)));
+                    for (let i = 0; i < numBranches; i++) {
+                        const t = 0.25 + (i / numBranches) * 0.65;
+                        const bx = x + curveAmt * t, by = y - height * t;
+                        const side = (i % 2 === 0) ? -1 : 1;
+                        const len = 15 + progress * 35 * (0.5 + rng() * 0.5);
+                        const angle = side * (0.4 + rng() * 0.8);
+                        const bEndX = bx + Math.cos(angle - Math.PI / 2) * len * side;
+                        const bEndY = by + Math.sin(angle - Math.PI / 2) * len * 0.6;
+                        const bWidth = 1.5 + progress * 2.5 * (1 - t * 0.5);
+                        bCtx.beginPath(); bCtx.moveTo(bx, by);
+                        bCtx.lineWidth = bWidth; bCtx.strokeStyle = trunkColor; bCtx.lineCap = 'round';
+                        const ctrlX = bx + (bEndX - bx) * 0.5 + rng() * 10 - 5;
+                        const ctrlY = by + (bEndY - by) * 0.3 - 10;
+                        bCtx.quadraticCurveTo(ctrlX, ctrlY, bEndX, bEndY); bCtx.stroke();
+                        if (stageIdx >= 3) {
+                            const subLen = len * 0.4, subAngle = angle + (rng() - 0.5) * 1.2;
+                            const sbEndX = bEndX + Math.cos(subAngle) * subLen * side;
+                            const sbEndY = bEndY - subLen * 0.5;
+                            bCtx.beginPath(); bCtx.moveTo(bEndX, bEndY); bCtx.lineWidth = bWidth * 0.5;
+                            bCtx.quadraticCurveTo(bEndX + (sbEndX - bEndX) * 0.5, bEndY - 8, sbEndX, sbEndY); bCtx.stroke();
+                            if (stageIdx >= 3 && density > 0.2) {
+                                const subClusterR = (8 + progress * 6) * (0.3 + density * 0.7);
+                                drawLeafCluster(sbEndX, sbEndY, subClusterR, leafGreen2, alive, time, rng);
+                            }
+                        }
+                        if (stageIdx >= 2 && (i < visibleBranches || density > 0.5)) {
+                            const clusterSize = (10 + progress * 14) * (0.3 + density * 0.7);
+                            drawLeafCluster(bEndX, bEndY, clusterSize, leafGreen, alive, time, rng);
+                        }
+                    }
+                    if (stageIdx >= 2) {
+                        const crownR = (14 + progress * 18) * (0.4 + density * 0.6);
+                        drawLeafCluster(midX, topY, crownR, leafGreen2, alive, time, rng);
+                    }
+                }
+                if (stageIdx === 1) {
+                    const leafSize = (6 + progress * 8) * (0.5 + density * 0.5);
+                    drawSproutLeaf(midX, topY, leafSize, -0.6 + Math.sin(time * 1.5) * 0.05, leafGreen, alive);
+                    if (density > 0.3) {
+                        drawSproutLeaf(midX, topY, leafSize * 0.8, 0.5 + Math.sin(time * 1.5 + 1) * 0.05, leafGreen2, alive);
+                    }
+                }
+                bCtx.restore();
+                if (stageIdx >= 4 && alive) { drawFlowers(x, y, height, curveAmt, progress, rng, time); }
+            }
+
+            function drawLeafCluster(cx, cy, radius, color, alive, time, rng) {
+                const sway = Math.sin(time * 0.8 + cx * 0.01) * 2;
+                const numBlobs = 5 + Math.floor(rng() * 4);
+                for (let i = 0; i < numBlobs; i++) {
+                    const angle = (i / numBlobs) * Math.PI * 2 + rng() * 0.5;
+                    const dist = radius * (0.3 + rng() * 0.7);
+                    const bx = cx + Math.cos(angle) * dist + sway;
+                    const by = cy + Math.sin(angle) * dist * 0.7;
+                    const br = radius * (0.35 + rng() * 0.3);
+                    bCtx.beginPath(); bCtx.ellipse(bx, by, br, br * 0.8, rng() * 0.5, 0, Math.PI * 2);
+                    bCtx.fillStyle = color; bCtx.globalAlpha = alive ? 0.7 + rng() * 0.3 : 0.4;
+                    bCtx.fill(); bCtx.globalAlpha = 1;
+                }
+                if (alive) {
+                    bCtx.beginPath(); bCtx.ellipse(cx + sway - 2, cy - radius * 0.2, radius * 0.3, radius * 0.25, 0, 0, Math.PI * 2);
+                    bCtx.fillStyle = 'rgba(255,255,255,0.1)'; bCtx.fill();
+                }
+            }
+
+            function drawSproutLeaf(x, y, size, angle, color, alive) {
+                bCtx.save(); bCtx.translate(x, y); bCtx.rotate(angle);
+                bCtx.beginPath(); bCtx.moveTo(0, 0);
+                bCtx.quadraticCurveTo(size * 0.6, -size, size * 1.2, 0);
+                bCtx.quadraticCurveTo(size * 0.6, size * 0.5, 0, 0);
+                bCtx.fillStyle = color; bCtx.globalAlpha = alive ? 0.85 : 0.4; bCtx.fill(); bCtx.globalAlpha = 1;
+                bCtx.beginPath(); bCtx.moveTo(2, 0); bCtx.lineTo(size * 1, 0);
+                bCtx.strokeStyle = 'rgba(255,255,255,0.15)'; bCtx.lineWidth = 0.5; bCtx.stroke();
+                bCtx.restore();
+            }
+
+            function drawFlowers(x, y, height, curveAmt, progress, rng, time) {
+                const colors = ['#f0b8c8', '#f0c8d8', '#e8a8b8', '#f8d0e0'];
+                const numFlowers = 4 + Math.floor(rng() * 5);
+                for (let i = 0; i < numFlowers; i++) {
+                    const t = 0.3 + rng() * 0.6, side = rng() > 0.5 ? 1 : -1;
+                    const fx = x + curveAmt * t + side * (15 + rng() * 30);
+                    const fy = y - height * t - rng() * 15;
+                    const petalSize = 3 + rng() * 3, sway = Math.sin(time + i) * 1.5;
+                    const color = colors[Math.floor(rng() * colors.length)];
+                    for (let p = 0; p < 5; p++) {
+                        const pa = (p / 5) * Math.PI * 2;
+                        bCtx.beginPath();
+                        bCtx.ellipse(fx + sway + Math.cos(pa) * petalSize, fy + Math.sin(pa) * petalSize, petalSize * 0.6, petalSize * 0.4, pa, 0, Math.PI * 2);
+                        bCtx.fillStyle = color; bCtx.globalAlpha = 0.7; bCtx.fill();
+                    }
+                    bCtx.beginPath(); bCtx.arc(fx + sway, fy, petalSize * 0.3, 0, Math.PI * 2);
+                    bCtx.fillStyle = '#f0d87e'; bCtx.globalAlpha = 0.9; bCtx.fill(); bCtx.globalAlpha = 1;
+                }
+            }
+
+            // ═══ PARTICLES ═══
+            let particles = [];
+
+            function spawnParticle(type) {
+                const W = particleCanvas.width, H = particleCanvas.height;
+                if (type === 'leaf') {
+                    particles.push({ type: 'leaf', x: Math.random() * W, y: -10, vx: (Math.random() - 0.5) * 0.5, vy: 0.3 + Math.random() * 0.5, rotation: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.02, size: 4 + Math.random() * 5, opacity: 0.3 + Math.random() * 0.4, color: ['#8fae8b', '#a4c49e', '#c4a882', '#d4b892'][Math.floor(Math.random() * 4)], life: 600 + Math.random() * 400 });
+                } else if (type === 'firefly') {
+                    particles.push({ type: 'firefly', x: Math.random() * W, y: H * 0.3 + Math.random() * H * 0.5, vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3, size: 2 + Math.random() * 2, opacity: 0, maxOpacity: 0.4 + Math.random() * 0.4, phase: Math.random() * Math.PI * 2, life: 300 + Math.random() * 500 });
+                } else if (type === 'droplet') {
+                    const cx = W / 2, cy = H * 0.45;
+                    particles.push({ type: 'droplet', x: cx + (Math.random() - 0.5) * 80, y: cy - 30 + Math.random() * 20, vy: 1 + Math.random() * 2, size: 2 + Math.random() * 2, opacity: 0.5 + Math.random() * 0.3, life: 60 + Math.random() * 40 });
+                }
+            }
+
+            function updateParticles() {
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    const p = particles[i]; p.life--;
+                    if (p.life <= 0) { particles.splice(i, 1); continue; }
+                    if (p.type === 'leaf') { p.x += p.vx + Math.sin(Date.now() / 2000 + p.rotation) * 0.3; p.y += p.vy; p.rotation += p.rotSpeed; if (p.life < 50) p.opacity *= 0.96; }
+                    else if (p.type === 'firefly') { p.x += p.vx + Math.sin(Date.now() / 3000 + p.phase) * 0.2; p.y += p.vy + Math.cos(Date.now() / 2500 + p.phase) * 0.15; p.opacity = p.maxOpacity * Math.abs(Math.sin(Date.now() / 800 + p.phase)); }
+                    else if (p.type === 'droplet') { p.y += p.vy; p.vy += 0.1; if (p.life < 20) p.opacity *= 0.9; }
+                }
+            }
+
+            function renderParticles() {
+                pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+                for (const p of particles) {
+                    pCtx.save();
+                    if (p.type === 'leaf') { pCtx.translate(p.x, p.y); pCtx.rotate(p.rotation); pCtx.globalAlpha = p.opacity; pCtx.fillStyle = p.color; pCtx.beginPath(); pCtx.ellipse(0, 0, p.size, p.size * 0.5, 0, 0, Math.PI * 2); pCtx.fill(); }
+                    else if (p.type === 'firefly') { pCtx.globalAlpha = p.opacity; const grad = pCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 3); grad.addColorStop(0, '#f0e878'); grad.addColorStop(0.4, 'rgba(240,232,120,0.3)'); grad.addColorStop(1, 'rgba(240,232,120,0)'); pCtx.fillStyle = grad; pCtx.beginPath(); pCtx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2); pCtx.fill(); }
+                    else if (p.type === 'droplet') { pCtx.globalAlpha = p.opacity; pCtx.fillStyle = '#7eb8d4'; pCtx.beginPath(); pCtx.ellipse(p.x, p.y, p.size * 0.5, p.size, 0, 0, Math.PI * 2); pCtx.fill(); }
+                    pCtx.restore();
+                }
+            }
+
+            // ═══ GAME LOGIC ═══
+            function doAction(action) {
+                if (!state.alive) return;
+                if (Date.now() < cooldowns[action]) return;
+                startAmbience(); playActionSound(action);
+                switch (action) {
+                    case 'water':
+                        state.hydration = Math.min(100, state.hydration + 20); state.points += 5;
+                        showToast('💧 +5 pts — Refreshing!');
+                        for (let i = 0; i < 12; i++) spawnParticle('droplet'); break;
+                    case 'trim':
+                        if (state.stage < 2) return;
+                        const trimAmt = 0.15 + Math.random() * 0.15;
+                        state.leafDensity = Math.max(0.1, state.leafDensity - trimAmt);
+                        state.points += 10; state.treeSeed += 0.3;
+                        for (let i = 0; i < 8; i++) spawnParticle('leaf');
+                        { const pct = Math.round(state.leafDensity * 100); showToast(`✂️ +10 pts — Trimmed! Density: ${pct}%`); } break;
+                    case 'fertilize':
+                        state.growth = Math.min(100, state.growth + 8); state.health = Math.min(100, state.health + 5);
+                        state.points += 8; showToast('🌱 +8 pts — Rich nutrients!'); break;
+                    case 'sunlight':
+                        state.health = Math.min(100, state.health + 10); state.points += 3;
+                        showToast('☀️ +3 pts — Warm sunlight!'); break;
+                    case 'meditate':
+                        state.health = Math.min(100, state.health + 3); state.hydration = Math.min(100, state.hydration + 2);
+                        state.points += 2; showToast('🧘 +2 pts — Inner peace…');
+                        if (audioCtx) { setTimeout(() => playChime(262, 1.2), 300); setTimeout(() => playChime(330, 1.0), 600); setTimeout(() => playChime(392, 1.5), 900); } break;
+                }
+                cooldowns[action] = Date.now() + COOLDOWN_DURATION[action];
+                const btn = $(`#btn-${action}`);
+                btn.classList.add('cooldown');
+                setTimeout(() => btn.classList.remove('cooldown'), COOLDOWN_DURATION[action]);
+                btn.style.animation = 'pulse 0.3s ease';
+                setTimeout(() => btn.style.animation = '', 300);
+                updateStage(); updateUI(); saveGame();
+            }
+
+            function updateStage() {
+                let newStage = 0;
+                for (let i = STAGES.length - 1; i >= 0; i--) { if (state.growth >= STAGES[i].minGrowth) { newStage = i; break; } }
+                if (newStage !== state.stage) { state.stage = newStage; showToast(`🌟 Stage: ${STAGES[newStage].name}!`); state.points += newStage * 15; }
+                const trimBtn = $('#btn-trim');
+                trimBtn.disabled = state.stage < 2;
+            }
+
+            function tick() {
+                if (!state.alive) return;
+                const now = Date.now(), dt = (now - state.lastTick) / 1000;
+                state.lastTick = now;
+                state.hydration = Math.max(0, state.hydration - dt * 0.35);
+                state.health = Math.max(0, state.health - dt * 0.12);
+                state.growth = Math.max(0, state.growth - dt * 0.04);
+                if (state.hydration > 25 && state.health > 20) {
+                    const growthRate = 0.08 * (state.hydration / 100) * (state.health / 100);
+                    state.growth = Math.min(100, state.growth + dt * growthRate);
+                }
+                if (state.health > 30 && state.hydration > 20) { state.leafDensity = Math.min(1.0, state.leafDensity + dt * 0.008); }
+                if (state.health < 15) { state.leafDensity = Math.max(0.05, state.leafDensity - dt * 0.02); }
+                if (state.hydration < 10) { state.health = Math.max(0, state.health - dt * 0.5); }
+                if (state.health <= 0 && state.hydration <= 0) { state.alive = false; deathOverlay.classList.remove('hidden'); showToast('🍂 Your bonsai has wilted…'); }
+                updateStage();
+            }
+
+            function updateDayCycle() {
+                state.dayTimer++;
+                const phase = state.dayTimer % 270;
+                const skyBg = $('#sky-bg');
+                if (phase < 90) { state.dayPhase = 'day'; skyBg.className = ''; document.body.classList.remove('night-mode'); }
+                else if (phase < 150) { state.dayPhase = 'sunset'; skyBg.className = 'sunset'; document.body.classList.remove('night-mode'); }
+                else { state.dayPhase = 'night'; skyBg.className = 'night'; document.body.classList.add('night-mode'); }
+            }
+
+            function updateUI() {
+                const h = Math.round(state.hydration), hp = Math.round(state.health), g = Math.round(state.growth);
+                hydrationFill.style.width = h + '%'; healthFill.style.width = hp + '%'; growthFill.style.width = g + '%';
+                hydrationText.textContent = h + '%'; healthText.textContent = hp + '%'; growthText.textContent = g + '%';
+                hydrationFill.style.background = h < 20 ? 'linear-gradient(90deg, #d4887e, #e8a898)' : 'linear-gradient(90deg, #7eb8d4, #a8d4e8)';
+                healthFill.style.background = hp < 20 ? 'linear-gradient(90deg, #d4887e, #e8a898)' : 'linear-gradient(90deg, #7ec87e, #a8e8a8)';
+                pointsValue.textContent = state.points;
+                stageLabel.textContent = STAGES[state.stage].name;
+                stageIcon.textContent = STAGES[state.stage].icon;
+            }
+
+            function showToast(msg) {
+                const container = $('#toast-container');
+                const el = document.createElement('div'); el.className = 'toast'; el.textContent = msg;
+                container.appendChild(el); setTimeout(() => el.remove(), 2500);
+            }
+
+            let msgIndex = 0;
+            function cycleMindfulMessage() {
+                mindfulMsg.style.opacity = 0;
+                setTimeout(() => { msgIndex = (msgIndex + 1) % MESSAGES.length; mindfulMsg.textContent = MESSAGES[msgIndex]; mindfulMsg.style.opacity = 1; }, 500);
+            }
+
+            function saveGame() {
+                const data = { hydration: state.hydration, health: state.health, growth: state.growth, leafDensity: state.leafDensity, points: state.points, stage: state.stage, alive: state.alive, treeSeed: state.treeSeed, savedAt: Date.now() };
+                try { localStorage.setItem(SAVE_KEY, JSON.stringify(data)); } catch (e) { }
+            }
+
+            function loadGame() {
+                try {
+                    const raw = localStorage.getItem(SAVE_KEY); if (!raw) return;
+                    const data = JSON.parse(raw);
+                    state.hydration = data.hydration ?? 70; state.health = data.health ?? 80;
+                    state.growth = data.growth ?? 0; state.leafDensity = data.leafDensity ?? 1.0;
+                    state.points = data.points ?? 0; state.stage = data.stage ?? 0;
+                    state.alive = data.alive ?? true; state.treeSeed = data.treeSeed ?? state.treeSeed;
+                    if (data.savedAt) {
+                        const cappedAway = Math.min((Date.now() - data.savedAt) / 1000, 6 * 3600);
+                        state.hydration = Math.max(0, state.hydration - cappedAway * 0.15);
+                        state.health = Math.max(0, state.health - cappedAway * 0.05);
+                    }
+                    if (!state.alive) { deathOverlay.classList.remove('hidden'); }
+                } catch (e) { }
+            }
+
+            function resetGame() {
+                state = { hydration: 70, health: 80, growth: 0, leafDensity: 1.0, points: 0, stage: 0, alive: true, lastTick: Date.now(), dayPhase: 'day', dayTimer: 0, branches: [], leaves: [], treeSeed: Math.random() * 10000 };
+                deathOverlay.classList.add('hidden'); updateUI(); saveGame();
+            }
+
+            document.querySelectorAll('.action-btn[data-action]').forEach(btn => { btn.addEventListener('click', () => doAction(btn.dataset.action)); });
+            $('#btn-rebirth').addEventListener('click', resetGame);
+
+            let frameCount = 0;
+            function gameLoop() {
+                frameCount++;
+                if (frameCount % 60 === 0) { tick(); updateUI(); updateDayCycle(); }
+                if (frameCount % 600 === 0) { saveGame(); }
+                if (frameCount % 120 === 0) { spawnParticle(state.dayPhase === 'night' ? 'firefly' : 'leaf'); }
+                if (frameCount % 1200 === 0) { cycleMindfulMessage(); }
+                renderBonsai(); updateParticles(); renderParticles();
+                requestAnimationFrame(gameLoop);
+            }
+
+            loadGame(); state.lastTick = Date.now(); updateStage(); updateUI(); gameLoop();
+        })();
+    </script>
+</body>
+
+</html>
