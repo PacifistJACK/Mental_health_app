@@ -265,6 +265,40 @@ const Home = () => {
           </div>
         </div>
       </div>
+      {/* 🫧 Daily Mental Health Bubble */}
+      <motion.div
+        className="fixed z-50 bottom-6 right-6"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.div
+          className="relative flex items-center justify-center w-16 h-16 text-white rounded-full shadow-xl cursor-pointer bg-gradient-to-r from-pink-500 to-purple-500"
+          whileHover={{ scale: 1.15 }}
+          whileTap={{ scale: 0.95 }}
+          animate={{
+            y: [0, -10, 0],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          onClick={() =>
+            window.open("https://wellsense-frontend.onrender.com", "_blank")
+          }
+        >
+          <Brain className="w-8 h-8" />
+
+          {/* Pulse Effect */}
+          <span className="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-pink-400"></span>
+        </motion.div>
+
+        {/* Tooltip */}
+        <div className="absolute px-3 py-1 text-sm text-white -translate-x-1/2 rounded-lg shadow-md -top-10 left-1/2 bg-black/70 whitespace-nowrap">
+          Daily Check 🧠
+        </div>
+      </motion.div>
     </div>
   );
 };
