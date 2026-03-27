@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description"
+        content="A calming digital zen sand garden for mental wellbeing. Rake patterns, place stones, find your peace.">
+    <title>Zen Sand Garden — Find Your Calm</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="sand-garden.css?v=1">
+</head>
+
+<body>
+    <!-- Ambient particles layer -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Day/night gradient background -->
+    <div id="sky-bg"></div>
+
+    <!-- Main game container -->
+    <div id="game-wrapper">
+
+        <!-- Header -->
+        <header id="game-header">
+            <div class="brand">
+                <span class="brand-icon">☯</span>
+                <h1>Zen Garden</h1>
+            </div>
+            <div class="header-right">
+                <div class="points-display">
+                    <span id="points-value">0</span>
+                    <span class="points-label">serenity</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sand garden canvas -->
+        <main id="garden-area">
+            <canvas id="garden-canvas"></canvas>
+            <div id="toast-container"></div>
+        </main>
+
+        <!-- Tool buttons -->
+        <nav id="tool-panel">
+            <button class="tool-btn active" id="btn-fine-rake" data-tool="fine-rake"
+                title="Fine Rake — draw parallel lines">
+                <span class="tool-emoji">𝌆</span>
+                <span class="tool-label">Rake</span>
+            </button>
+            <button class="tool-btn" id="btn-wave-rake" data-tool="wave-rake" title="Wave Rake — sinuous wave patterns">
+                <span class="tool-emoji">〰️</span>
+                <span class="tool-label">Wave</span>
+            </button>
+            <button class="tool-btn" id="btn-spiral" data-tool="spiral" title="Spiral — circular zen patterns">
+                <span class="tool-emoji">🌀</span>
+                <span class="tool-label">Spiral</span>
+            </button>
+            <button class="tool-btn" id="btn-stone" data-tool="stone" title="Place Stone — add rocks to your garden">
+                <span class="tool-emoji">🪨</span>
+                <span class="tool-label">Stone</span>
+            </button>
+            <button class="tool-btn" id="btn-moss" data-tool="moss" title="Place Moss — add green accents">
+                <span class="tool-emoji">🌿</span>
+                <span class="tool-label">Moss</span>
+            </button>
+            <button class="tool-btn" id="btn-reset" data-tool="reset" title="Reset — smooth all sand">
+                <span class="tool-emoji">🔄</span>
+                <span class="tool-label">Reset</span>
+            </button>
+        </nav>
+
+        <!-- Pattern templates -->
+        <div id="patterns-panel">
+            <button class="pattern-btn" data-pattern="concentric" title="Concentric circles around stones">
+                <span class="pattern-emoji">◎</span>
+                <span class="pattern-label">Ripples</span>
+            </button>
+            <button class="pattern-btn" data-pattern="horizontal" title="Horizontal lines across the garden">
+                <span class="pattern-emoji">☰</span>
+                <span class="pattern-label">Lines</span>
+            </button>
+            <button class="pattern-btn" data-pattern="diagonal" title="Diagonal lines">
+                <span class="pattern-emoji">⟋</span>
+                <span class="pattern-label">Diagonal</span>
+            </button>
+            <button class="pattern-btn" data-pattern="waves" title="Flowing wave pattern">
+                <span class="pattern-emoji">🌊</span>
+                <span class="pattern-label">Waves</span>
+            </button>
+            <button class="pattern-btn" data-pattern="circles" title="Full concentric circles">
+                <span class="pattern-emoji">◯</span>
+                <span class="pattern-label">Circles</span>
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <footer id="game-footer">
+            <p id="mindful-message">Each stroke in the sand is a moment of peace. ☯</p>
+        </footer>
+
+    </div>
+
+    <script src="sand-garden.js?v=1"></script>
+</body>
+
+</html>

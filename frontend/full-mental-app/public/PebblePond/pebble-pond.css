@@ -1,0 +1,208 @@
+/* Pebble Pond Styles */
+:root {
+  --bg-color-top: #0a192f;
+  --bg-color-bottom: #020c1b;
+  --text-color: #8892b0;
+  --text-highlight: #ccd6f6;
+  --accent-color: #64ffda;
+  --ripple-color: 100, 255, 218; /* RGB for rgba */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(135deg, var(--bg-color-top), var(--bg-color-bottom));
+  color: var(--text-highlight);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+#game-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  pointer-events: none; /* Let clicks pass through down to the canvas */
+}
+
+#pond-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: auto; /* Catch clicks here */
+}
+
+#pond-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair; /* Or a custom pebble cursor */
+}
+
+/* Header UI */
+#game-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+  background: linear-gradient(to bottom, rgba(2, 12, 27, 0.8) 0%, transparent 100%);
+  pointer-events: auto;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-icon {
+  font-size: 1.8rem;
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: 300;
+  letter-spacing: 2px;
+  color: var(--text-highlight);
+  text-transform: uppercase;
+}
+
+.header-right {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.nav-link {
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.3s ease;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-link:hover {
+  color: var(--accent-color);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Footer UI */
+#game-footer {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  pointer-events: auto;
+}
+
+#mindful-message {
+  font-size: 1.1rem;
+  color: var(--text-color);
+  font-weight: 300;
+  letter-spacing: 1px;
+  opacity: 0.7;
+  transition: opacity 2s ease-in-out;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+/* Points Display */
+.points-display {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 8px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#points-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-color);
+  line-height: 1;
+}
+
+.points-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.7;
+}
+
+/* Action Panel */
+#action-panel {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 20;
+  pointer-events: auto;
+}
+
+.action-btn {
+  background: rgba(20, 30, 50, 0.8);
+  border: 1px solid rgba(100, 255, 218, 0.2);
+  color: var(--text-color);
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.action-btn:hover {
+  background: rgba(30, 45, 70, 0.9);
+  border-color: rgba(100, 255, 218, 0.5);
+  transform: scale(1.05);
+}
+
+.action-btn.active {
+  background: rgba(100, 255, 218, 0.15);
+  border-color: var(--accent-color);
+  color: var(--text-highlight);
+  box-shadow: 0 0 15px rgba(100, 255, 218, 0.3);
+}
+
+.btn-emoji {
+  font-size: 1.5rem;
+  margin-bottom: 2px;
+}
+
+.btn-label {
+  font-size: 0.7rem;
+  font-family: 'Nunito', sans-serif;
+  text-transform: uppercase;
+}

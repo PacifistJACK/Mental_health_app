@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A calming interactive pond. Drop a pebble, watch the ripples.">
+  <title>Pebble Pond — Find Your Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="pebble-pond.css">
+</head>
+<body>
+  
+  <div id="game-wrapper">
+    <header id="game-header">
+      <div class="brand">
+        <span class="brand-icon">💧</span>
+        <h1>Pebble Pond</h1>
+      </div>
+      <div class="header-right">
+        <a href="../index.html" class="nav-link" title="Return to Zen Hub">
+          <span class="nav-emoji">🌿</span>
+          Zen Hub
+        </a>
+        <div class="points-display">
+          <span id="points-value">0</span>
+          <span class="points-label">harmony points</span>
+        </div>
+      </div>
+    </header>
+
+    <main id="pond-area">
+      <canvas id="pond-canvas"></canvas>
+      
+      <!-- Action buttons -->
+      <nav id="action-panel">
+        <button class="action-btn active" id="btn-small" data-size="small" title="Small Pebble">
+          <span class="btn-emoji">▫️</span>
+          <span class="btn-label">Small</span>
+        </button>
+        <button class="action-btn" id="btn-medium" data-size="medium" title="Skipping Stone">
+          <span class="btn-emoji">🪨</span>
+          <span class="btn-label">Medium</span>
+        </button>
+        <button class="action-btn" id="btn-large" data-size="large" title="Heavy Rock">
+          <span class="btn-emoji">⛰️</span>
+          <span class="btn-label">Large</span>
+        </button>
+      </nav>
+    </main>
+
+    <footer id="game-footer">
+      <p id="mindful-message">Drop a stone. Watch the ripples fade. 🪨</p>
+    </footer>
+  </div>
+
+  <script src="pebble-pond.js"></script>
+</body>
+</html>

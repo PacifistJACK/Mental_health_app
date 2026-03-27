@@ -24,6 +24,7 @@ export default function App() {
         <Route path="/signup" element={<Signup/>}/>
         <Route path="/profile" element={<Profile/>}/>
         <Route path="/play-arena" element={<PlayArena />} />
+        <Route path="/play-arena/:gameId" element={<PlayArena />} />
       </Routes>
     </Router>
   );
