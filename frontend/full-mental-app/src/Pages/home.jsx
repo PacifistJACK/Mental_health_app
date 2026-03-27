@@ -268,38 +268,38 @@ const Home = () => {
       </div>
       {/* 🫧 Daily Mental Health Bubble */}
       <motion.div
-        className="fixed z-50 cursor-pointer bottom-6 right-6"
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 1, type: "spring" }}
-        onClick={() =>
-          window.open("https://wellsense-frontend.onrender.com", "_blank")
-        }
-      >
-        <motion.div
-          className="flex items-center justify-center w-16 h-16 shadow-lg bg-gradient-to-r from-pink-500 to-purple-500 rounded-full"
-          animate={{
-            y: [0, -10, 0],
-            boxShadow: [
-              "0 0 0px rgba(236,72,153,0.5)",
-              "0 0 20px rgba(236,72,153,0.8)",
-              "0 0 0px rgba(236,72,153,0.5)"
-            ]
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        >
-          <Brain className="w-8 h-8 text-white" />
-        </motion.div>
+  className="fixed z-50 cursor-pointer bottom-6 right-6 group"
+  initial={{ scale: 0 }}
+  animate={{ scale: 1 }}
+  transition={{ delay: 1, type: "spring" }}
+  onClick={() =>
+    window.open("https://wellsense-frontend.onrender.com", "_blank")
+  }
+>
+  <motion.div
+    className="flex items-center justify-center w-16 h-16 shadow-lg bg-gradient-to-r from-pink-500 to-purple-500 rounded-full"
+    animate={{
+      y: [0, -10, 0],
+      boxShadow: [
+        "0 0 0px rgba(236,72,153,0.5)",
+        "0 0 20px rgba(236,72,153,0.8)",
+        "0 0 0px rgba(236,72,153,0.5)"
+      ]
+    }}
+    transition={{
+      duration: 2,
+      repeat: Infinity,
+      ease: "easeInOut"
+    }}
+  >
+    <Brain className="w-8 h-8 text-white" />
+  </motion.div>
 
-        {/* Tooltip */}
-        <div className="px-3 py-1 mt-2 text-sm text-center text-white bg-gray-800 rounded-lg shadow-md">
-          Daily Check 🧠
-        </div>
-      </motion.div>
+  {/* 🫧 Tooltip (ONLY on hover) */}
+  <div className="absolute px-3 py-1 text-sm text-white -translate-x-1/2 rounded-lg shadow-md opacity-0 bottom-20 left-1/2 bg-gray-800 whitespace-nowrap group-hover:opacity-100 transition duration-200">
+    Daily Check 🧠
+  </div>
+</motion.div>
     </div>
   );
 };
